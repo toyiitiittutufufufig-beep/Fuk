@@ -3,121 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KINGDOM GUILD | ملوك الون تاب</title>
+    <title>KINGDOM GUILD | BEPO</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+
         :root {
-            --neon-color: #bc13fe; /* موف نيون */
-            --bg-black: #050505;
+            --neon: #bc13fe;
+            --dark-surface: #121212;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-black);
-            color: white;
+            background-color: #000;
+            color: #fff;
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         .main-card {
             width: 90%;
-            max-width: 600px;
-            background: rgba(20, 20, 20, 0.8);
-            border: 2px solid var(--neon-color);
-            border-radius: 20px;
-            padding: 30px;
+            max-width: 500px;
+            background: #1a1a1a;
+            border: 3px solid var(--neon);
+            border-radius: 15px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 0 20px var(--neon-color), inset 0 0 10px var(--neon-color);
-            margin: 20px;
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.5);
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--neon);
+            text-shadow: 0 0 10px var(--neon);
+        }
+
+        .leader-tag {
+            background: var(--neon);
+            color: #000;
+            padding: 2px 15px;
+            border-radius: 5px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .rules-container {
+            background: #222;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: right; /* عشان الكلام العربي يبان صح */
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+
+        .rules-container h2 {
             color: #fff;
-            text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
-            margin-bottom: 5px;
-        }
-
-        .leader-name {
-            color: var(--neon-color);
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            display: block;
-        }
-
-        /* زخرفة قائمة اللائحة */
-        .rules-list {
-            text-align: right;
-            background: rgba(138, 43, 226, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 4px solid var(--neon-color);
-            margin-bottom: 25px;
-        }
-
-        .rules-list h2 {
-            color: var(--neon-color);
-            font-size: 1.5rem;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--neon);
+            padding-bottom: 5px;
             margin-top: 0;
         }
 
-        .rules-list ul {
-            list-style: none;
+        .rules-container ul {
             padding: 0;
+            list-style: none;
         }
 
-        .rules-list li {
-            padding: 8px 0;
-            font-size: 1.1rem;
-            border-bottom: 1px dashed #333;
+        .rules-container li {
+            margin: 10px 0;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
         }
 
-        .rules-list li::before {
-            content: "⚡";
+        .rules-container li::before {
+            content: "◆";
+            color: var(--neon);
             margin-left: 10px;
-            color: var(--neon-color);
+            font-size: 1.2rem;
         }
 
-        .contact-box {
-            background: #111;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            margin-bottom: 20px;
+        .info-box {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px dashed var(--neon);
+            border-radius: 8px;
+        }
+
+        .phone {
+            display: block;
+            font-size: 1.4rem;
+            color: #00ffcc;
+            text-decoration: none;
+            margin-top: 5px;
+            font-weight: bold;
         }
 
         .whatsapp-btn {
             display: block;
-            background: transparent;
-            color: white;
-            border: 2px solid var(--neon-color);
-            padding: 15px;
-            border-radius: 50px;
+            background: var(--neon);
+            color: #fff;
             text-decoration: none;
-            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 900;
             font-size: 1.2rem;
-            transition: 0.4s;
-            box-shadow: 0 0 10px var(--neon-color);
+            box-shadow: 0 4px 15px rgba(188, 19, 254, 0.4);
+            transition: 0.3s;
         }
 
         .whatsapp-btn:hover {
-            background: var(--neon-color);
-            box-shadow: 0 0 30px var(--neon-color);
-            transform: translateY(-3px);
-        }
-
-        .phone-num {
-            color: #00ffcc;
-            text-shadow: 0 0 5px #00ffcc;
-            font-family: monospace;
-            font-size: 1.3rem;
+            transform: scale(1.03);
+            filter: brightness(1.2);
         }
     </style>
 </head>
@@ -125,24 +127,24 @@
 
     <div class="main-card">
         <h1>• ᴋɪɴɢᴅＯＭ •</h1>
-        <span class="leader-name">BY BEPO FF</span>
+        <div class="leader-tag">LEADER: BEPO</div>
 
-        <div class="rules-list">
-            <h2>📜 لائحـة الـقـوانـيـن</h2>
+        <div class="rules-container">
+            <h2>📜 شروط دخول العرين:</h2>
             <ul>
-                <li>اللعب <b>ONE TAP ONLY</b> (ممنوع الرش).</li>
-                <li>لازم تكسب القائد <b>3 جولات</b> في التست.</li>
-                <li>الأسلحة: <b>(Desert Eagle - Woodpecker - AC80)</b>.</li>
-                <li>الاحترام فوق كل شيء والتفاعل يومي.</li>
+                <li>اللعب <b>ONE TAP ONLY</b> (هيدشوت بس).</li>
+                <li>لازم تجيب <b>3 جولات</b> في التست ضد القائد.</li>
+                <li>الأسلحة: (نسر - نقار - AC80).</li>
+                <li>الاحترام والتفاعل شرط أساسي للبقاء.</li>
             </ul>
         </div>
 
-        <div class="contact-box">
-            <span>📞 تواصل مع القائد:</span><br>
-            <span class="phone-num">01206364129</span>
+        <div class="info-box">
+            <span>📞 رقم القائد للتواصل:</span>
+            <a href="tel:01206364129" class="phone">01206364129</a>
         </div>
 
-        <a href="https://chat.whatsapp.com/LjP9ylrwmZr3ZRVfGQji0M" class="whatsapp-btn">دخول المملكة (WhatsApp) 🔥</a>
+        <a href="https://chat.whatsapp.com/LjP9ylrwmZr3ZRVfGQji0M" class="whatsapp-btn">اضغط هنا للانضمام للواتساب 🔥</a>
     </div>
 
 </body>
